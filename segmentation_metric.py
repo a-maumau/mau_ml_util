@@ -308,9 +308,9 @@ if __name__ == '__main__':
     g = torch.randint(0, 10, (16, 512, 512)).to(device=map_device)
     start = time.time()
     results = [
-                pixel_accuracy(p, g, map_device=map_device)
+                pixel_accuracy(p, g, map_device=map_device),
                 precision(p, g, class_num=3, size_average=True, map_device=map_device),
-                jaccard_index(p, g, class_num=3, size_average=True, map_device=map_device),
+                jaccard_index(p, g, class_num=3, size_average=True, map_device=map_device)
               ]
     elapsed_time = time.time() - start
     print ("elapsed_time:{} sec".format(elapsed_time))
