@@ -36,6 +36,8 @@ def pixel_accuracy(pred_labels, gt_labels, size_average=True, map_device=CPU):
 
 def precision(pred_labels, gt_labels, class_num=2, size_average=True, only_class=None, ignore=[255],exclude_non_appear_class=True, map_device=CPU):
     """
+    precision: TP/(TP+FP)
+
         ignore: list or int
             it will be ignored in the evaluation.
             exception is if only_class is not None.
@@ -57,6 +59,7 @@ def precision(pred_labels, gt_labels, class_num=2, size_average=True, only_class
 
         count = 0
         batch_result = []
+
         class_id = only_class
 
         class_mask = (gt_labels==class_id).view(batch_size, -1).to(device=map_device, dtype=torch.long) # 0,1 mask
@@ -68,13 +71,10 @@ def precision(pred_labels, gt_labels, class_num=2, size_average=True, only_class
 
         # to avoid error at all-zero mask
         for batch_index in range(batch_size):
-            if TPFP[batch_index] == 0 and cls_gt[batch_index] == 0: 
-                if exclude_non_appear_class:
-                    continue
+            if cls_gt[batch_index] == 0 and exclude_non_appear_class:
+                continue
+            elif TPFP[batch_index] == 0 and cls_gt[batch_index] == 0: 
                 batch_result.append(1.0)
-                count += 1
-            elif TPFP[batch_index] == 0 and cls_gt[batch_index] != 0:
-                batch_result.append(0.0)
                 count += 1
             else:
                 batch_result.append(float(TP[batch_index])/float(TPFP[batch_index]))
@@ -102,13 +102,10 @@ def precision(pred_labels, gt_labels, class_num=2, size_average=True, only_class
 
             # to avoid error at all-zero mask
             for batch_index in range(batch_size):
-                if TPFP[batch_index] == 0 and cls_gt[batch_index] == 0: 
-                    if exclude_non_appear_class:
-                        continue
+                if cls_gt[batch_index] == 0 and exclude_non_appear_class:
+                    continue
+                elif TPFP[batch_index] == 0 and cls_gt[batch_index] == 0: 
                     batch_result.append(1.0)
-                    count += 1
-                elif TPFP[batch_index] == 0 and cls_gt[batch_index] != 0:
-                    batch_result.append(0.0)
                     count += 1
                 else:
                     batch_result.append(float(TP[batch_index])/float(TPFP[batch_index]))
@@ -150,13 +147,10 @@ def jaccard_index(pred_labels, gt_labels, class_num=2, size_average=True, only_c
         # to avoid error at all-zero mask
         for batch_index in range(batch_size):
             denominator = u_pred[batch_index] + u_gt[batch_index] - intersection[batch_index]
-            if denominator == 0:
-                if exclude_non_appear_class:
+            if u_gt[batch_index] == 0 and exclude_non_appear_class:
                     continue
+            elif denominator == 0:
                 batch_result.append(1.0)
-                count += 1
-            elif u_pred[batch_index] > 0 and u_gt[batch_index] < 1:
-                batch_result.append(0.0)
                 count += 1
             else:
                 batch_result.append(float(intersection[batch_index].cpu().data)/float(denominator.cpu().data))
@@ -185,13 +179,10 @@ def jaccard_index(pred_labels, gt_labels, class_num=2, size_average=True, only_c
             # to avoid error at all-zero mask
             for batch_index in range(batch_size):
                 denominator = u_pred[batch_index] + u_gt[batch_index] - intersection[batch_index]
-                if denominator == 0:
-                    if exclude_non_appear_class:
-                        continue
+                if u_gt[batch_index] == 0 and exclude_non_appear_class:
+                    continue
+                elif denominator == 0:
                     batch_result.append(1.0)
-                    count += 1
-                elif u_pred[batch_index] > 0 and u_gt[batch_index] < 1:
-                    batch_result.append(0.0)
                     count += 1
                 else:
                     batch_result.append(float(intersection[batch_index].cpu().data)/float(denominator.cpu().data))
