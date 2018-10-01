@@ -304,8 +304,8 @@ if __name__ == '__main__':
               ]
 
     # speed check
-    p = torch.randint(0, 10, (16, 512, 512)).to(device=map_device)
-    g = torch.randint(0, 10, (16, 512, 512)).to(device=map_device)
+    p = torch.randint(0, 10, (16, 512, 512)).to(device=map_device, dtype=torch.long)
+    g = torch.randint(0, 10, (16, 512, 512)).to(device=map_device, dtype=torch.long)
     start = time.time()
     results = [
                 pixel_accuracy(p, g, map_device=map_device),
