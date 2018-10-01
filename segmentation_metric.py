@@ -291,7 +291,6 @@ if __name__ == '__main__':
     p = torch.LongTensor(input_tensor).to(device=map_device)
     g = torch.LongTensor(gt_tensor).to(device=map_device)
 
-    start = time.time()
     results = [
                 "pixel accuracy",
                 pixel_accuracy(p, g, map_device=map_device),
@@ -302,6 +301,16 @@ if __name__ == '__main__':
                 "jaccard index",
                 jaccard_index(p, g, class_num=3, size_average=True, map_device=map_device),
                 jaccard_index(p, g, class_num=3, size_average=False, map_device=map_device)
+              ]
+
+    # speed check
+    p = torch.randint(0, 10, (16, 512, 512)).to(device=map_device)
+    g = torch.randint(0, 10, (16, 512, 512)).to(device=map_device)
+    start = time.time()
+    results = [
+                pixel_accuracy(p, g, map_device=map_device)
+                precision(p, g, class_num=3, size_average=True, map_device=map_device),
+                jaccard_index(p, g, class_num=3, size_average=True, map_device=map_device),
               ]
     elapsed_time = time.time() - start
     print ("elapsed_time:{} sec".format(elapsed_time))
