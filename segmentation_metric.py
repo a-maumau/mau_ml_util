@@ -257,6 +257,8 @@ class SoftDiceLoss(nn.Module):
 
 # test
 if __name__ == '__main__':
+    map_device = torch.device('cuda:{}'.format(0))
+
     input_tensor = [
                     [[0,1,1],
                      [0,2,2],
@@ -274,21 +276,21 @@ if __name__ == '__main__':
                      [2,2,2]]
                 ]
 
-    p = torch.LongTensor(input_tensor)
-    g = torch.LongTensor(gt_tensor)
+    p = torch.LongTensor(input_tensor).cuda(0)
+    g = torch.LongTensor(gt_tensor).cuda(0)
 
     results = [
                 "pixel accuracy",
                 pixel_accuracy(p, g),
                 pixel_accuracy(p, g, size_average=False),
                 "precision",
-                precision(p, g, class_num=3, size_average=True),
-                precision(p, g, class_num=3, size_average=False),
+                precision(p, g, class_num=3, size_average=True, map_device=map_device),
+                precision(p, g, class_num=3, size_average=False, map_device=map_device),
                 "jaccard index",
-                jaccard_index(p, g, class_num=3, size_average=True),
-                jaccard_index(p, g, class_num=3, size_average=False)
+                jaccard_index(p, g, class_num=3, size_average=True, map_device=map_device),
+                jaccard_index(p, g, class_num=3, size_average=False, map_device=map_device)
               ]
-              
+
     print("prediction tensor")
     print(p)
     print("ground truth tensor")
