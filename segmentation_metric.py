@@ -32,18 +32,33 @@ def pixel_accuracy(pred_labels, gt_labels, size_average=True):
 
         return result
 
-def precision(pred_labels, gt_labels, class_num=2, size_average=True, only_class=None):
+def precision(pred_labels, gt_labels, class_num=2, size_average=True, only_class=None, ignore=[255],exclude_non_appear_class=True, map_device="cpu"):
+    """
+        ignore: list or int
+            it will be ignored in the evaluation.
+            exception is if only_class is not None.
+            it will evaluate the only_class class.
+
+        exclude_non_appear_class=True: bool
+            if this is true, it will exclude the non-appearing class in the gt_labels.
+            setting this to False case is if you want to return the non-prediction is correct and score is 1.0.
+            when size_average is False, it return the list of metric score without the exluded class.
+    """
+
     result = {}
     batch_size = pred_labels.shape[0]
+    if isinstance(ignore, int):
+        ignore = [ignore]
 
     if only_class:
         assert isinstance(only_class, int), "only_class should int"
 
+        count = 0
         batch_result = []
         class_id = only_class
 
-        class_mask = (gt_labels==class_id).view(batch_size, -1).type(torch.LongTensor) # 0,1 mask
-        pred_class = (pred_labels==class_id).view(batch_size, -1).type(torch.LongTensor) # 0,1 mask
+        class_mask = (gt_labels==class_id).view(batch_size, -1).type(torch.LongTensor).to(map_device) # 0,1 mask
+        pred_class = (pred_labels==class_id).view(batch_size, -1).type(torch.LongTensor).to(map_device) # 0,1 mask
         cls_gt = torch.sum(class_mask, dim=1)
 
         TP = torch.sum((pred_class*class_mask).view(batch_size, -1), dim=1)
@@ -52,39 +67,136 @@ def precision(pred_labels, gt_labels, class_num=2, size_average=True, only_class
         # to avoid error at all-zero mask
         for batch_index in range(batch_size):
             if TPFP[batch_index] == 0 and cls_gt[batch_index] == 0: 
+                if exclude_non_appear_class:
+                    continue
                 batch_result.append(1.0)
+                count += 1
             elif TPFP[batch_index] == 0 and cls_gt[batch_index] != 0:
                 batch_result.append(0.0)
+                count += 1
             else:
                 batch_result.append(float(TP[batch_index])/float(TPFP[batch_index]))
+                count += 1
 
         if size_average:
-            result["class_{}".format(class_id)] = sum(batch_result)/batch_size
+            result["class_{}".format(class_id)] = sum(batch_result)/count
         else:
             result["class_{}".format(class_id)] = batch_result
 
     else:
         for class_id in range(class_num):
+            if class_id in ignore:
+                continue
+
+            count = 0
             batch_result = []
 
-            class_mask = (gt_labels==class_id).view(batch_size, -1).type(torch.LongTensor) # 0,1 mask
-            pred_class = (pred_labels==class_id).view(batch_size, -1).type(torch.LongTensor) # 0,1 mask
+            class_mask = (gt_labels==class_id).view(batch_size, -1).type(torch.LongTensor).to(map_device) # 0,1 mask
+            pred_class = (pred_labels==class_id).view(batch_size, -1).type(torch.LongTensor).to(map_device) # 0,1 mask
             cls_gt = torch.sum(class_mask, dim=1)
 
-            TP = torch.sum((pred_class*class_mask).view(batch_size, -1), dim=1)
-            TPFP = torch.sum(pred_class.view(batch_size, -1), dim=1)
+            TP = torch.sum((pred_class*class_mask).view(batch_size, -1), dim=1).cpu()
+            TPFP = torch.sum(pred_class.view(batch_size, -1), dim=1).cpu()
 
             # to avoid error at all-zero mask
             for batch_index in range(batch_size):
                 if TPFP[batch_index] == 0 and cls_gt[batch_index] == 0: 
+                    if exclude_non_appear_class:
+                        continue
                     batch_result.append(1.0)
+                    count += 1
                 elif TPFP[batch_index] == 0 and cls_gt[batch_index] != 0:
                     batch_result.append(0.0)
+                    count += 1
                 else:
                     batch_result.append(float(TP[batch_index])/float(TPFP[batch_index]))
+                    count += 1
 
             if size_average:
-                result["class_{}".format(class_id)] = sum(batch_result)/batch_size
+                result["class_{}".format(class_id)] = sum(batch_result)/count
+            else:
+                result["class_{}".format(class_id)] = batch_result
+
+    return result
+
+def jaccard_index(pred_labels, gt_labels, class_num=2, size_average=True, only_class=None, ignore=[255], exclude_non_appear_class=True, map_device="cpu"):
+    """
+        pred_labels and gt_labels should be batch x w x h
+
+        known as IoU
+    """
+    result = {}
+    batch_size = pred_labels.shape[0]
+    if isinstance(ignore, int):
+        ignore = [ignore]
+    
+    if only_class is not None:
+        assert isinstance(only_class, int), "only_class should int"
+
+        count = 0
+        batch_result = []
+
+        class_id = only_class
+
+        class_mask = (gt_labels==class_id).view(batch_size, -1).type(torch.FloatTensor).to(map_device) # 0,1 mask
+        pred_class = (pred_labels==class_id).view(batch_size, -1).type(torch.FloatTensor).to(map_device) # 0,1 mask
+        
+        intersection = torch.sum(pred_class*class_mask, dim=1)
+        u_pred = torch.sum(pred_class, dim=1)
+        u_gt = torch.sum(class_mask, dim=1)
+
+        # to avoid error at all-zero mask
+        for batch_index in range(batch_size):
+            denominator = u_pred[batch_index] + u_gt[batch_index] - intersection[batch_index]
+            if denominator == 0:
+                if exclude_non_appear_class:
+                    continue
+                batch_result.append(1.0)
+                count += 1
+            elif u_pred[batch_index] > 0 and u_gt[batch_index] < 1:
+                batch_result.append(0.0)
+                count += 1
+            else:
+                batch_result.append(float(intersection[batch_index].cpu().data)/float(denominator.cpu().data))
+                count += 1
+
+        if size_average:
+            result["class_{}".format(class_id)] = sum(batch_result)/count
+        else:
+            result["class_{}".format(class_id)] = batch_result
+
+    else:
+        for class_id in range(class_num):
+            if class_id in ignore:
+                continue
+
+            count = 0
+            batch_result = []
+
+            class_mask = (gt_labels==class_id).view(batch_size, -1).type(torch.LongTensor).to(map_device) # 0,1 mask
+            pred_class = (pred_labels==class_id).view(batch_size, -1).type(torch.LongTensor).to(map_device) # 0,1 mask
+            
+            intersection = torch.sum(pred_class*class_mask, dim=1)
+            u_pred = torch.sum(pred_class, dim=1)
+            u_gt = torch.sum(class_mask, dim=1)
+
+            # to avoid error at all-zero mask
+            for batch_index in range(batch_size):
+                denominator = u_pred[batch_index] + u_gt[batch_index] - intersection[batch_index]
+                if denominator == 0:
+                    if exclude_non_appear_class:
+                        continue
+                    batch_result.append(1.0)
+                    count += 1
+                elif u_pred[batch_index] > 0 and u_gt[batch_index] < 1:
+                    batch_result.append(0.0)
+                    count += 1
+                else:
+                    batch_result.append(float(intersection[batch_index].cpu().data)/float(denominator.cpu().data))
+                    count += 1
+
+            if size_average:
+                result["class_{}".format(class_id)] = sum(batch_result)/count
             else:
                 result["class_{}".format(class_id)] = batch_result
 
@@ -114,77 +226,6 @@ def dice_score(pred_labels, gt_labels):
             result.append((TP[batch_index]*2)/denominator)
 
     return torch.FloatTensor(result)
-
-def jaccard_index(pred_labels, gt_labels, class_num=2, size_average=True, only_class=None):
-    """
-        binary class only
-        return the accuracy of all pixels
-        pred_labels and gt_labels should be batch x w x h
-
-        known as IoU
-    """
-    result = {}
-    batch_size = pred_labels.shape[0]
-
-    #pred_labels = pred_labels.view(batch_size, -1)
-    #gt_labels = gt_labels.view(batch_size, -1)
-    
-    if only_class is not None:
-        assert isinstance(only_class, int), "only_class should int"
-
-        batch_result = []
-
-        class_id = only_class
-
-        class_mask = (gt_labels==class_id).view(batch_size, -1).type(torch.FloatTensor) # 0,1 mask
-        pred_class = (pred_labels==class_id).view(batch_size, -1).type(torch.FloatTensor) # 0,1 mask
-        
-        intersection = torch.sum(pred_class*class_mask, dim=1)
-        u_pred = torch.sum(pred_class, dim=1)
-        u_gt = torch.sum(class_mask, dim=1)
-
-        # to avoid error at all-zero mask
-        for batch_index in range(batch_size):
-            denominator = u_pred[batch_index] + u_gt[batch_index] - intersection[batch_index]
-            if denominator == 0:
-                batch_result.append(1.0)
-            elif u_pred[batch_index] > 0 and u_gt[batch_index] < 1:
-                batch_result.append(0.0)
-            else:
-                batch_result.append(float(intersection[batch_index].data)/float(denominator.data))
-
-        if size_average:
-            result["class_{}".format(class_id)] = sum(batch_result)/batch_size
-        else:
-            result["class_{}".format(class_id)] = batch_result
-
-    else:
-        for class_id in range(class_num):
-            batch_result = []
-
-            class_mask = (gt_labels==class_id).view(batch_size, -1).type(torch.LongTensor) # 0,1 mask
-            pred_class = (pred_labels==class_id).view(batch_size, -1).type(torch.LongTensor) # 0,1 mask
-            
-            intersection = torch.sum(pred_class*class_mask, dim=1)
-            u_pred = torch.sum(pred_class, dim=1)
-            u_gt = torch.sum(class_mask, dim=1)
-
-            # to avoid error at all-zero mask
-            for batch_index in range(batch_size):
-                denominator = u_pred[batch_index] + u_gt[batch_index] - intersection[batch_index]
-                if denominator == 0:
-                    batch_result.append(1.0)
-                elif u_pred[batch_index] > 0 and u_gt[batch_index] < 1:
-                    batch_result.append(0.0)
-                else:
-                    batch_result.append(float(intersection[batch_index].data)/float(denominator.data))
-
-            if size_average:
-                result["class_{}".format(class_id)] = sum(batch_result)/batch_size
-            else:
-                result["class_{}".format(class_id)] = batch_result
-
-    return result
 
 # from http://forums.fast.ai/t/understanding-the-dice-coefficient/5838
 class SoftDiceLoss(nn.Module):
