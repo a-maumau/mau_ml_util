@@ -259,7 +259,7 @@ class SoftDiceLoss(nn.Module):
 
 # test
 if __name__ == '__main__':
-    map_device = torch.device('cuda:{}'.format(0))
+    map_device = torch.device('cuda:0')
 
     input_tensor = [
                     [[0,1,1],
@@ -283,8 +283,8 @@ if __name__ == '__main__':
 
     results = [
                 "pixel accuracy",
-                pixel_accuracy(p, g),
-                pixel_accuracy(p, g, size_average=False),
+                pixel_accuracy(p, g, map_device=map_device),
+                pixel_accuracy(p, g, size_average=False, map_device=map_device),
                 "precision",
                 precision(p, g, class_num=3, size_average=True, map_device=map_device),
                 precision(p, g, class_num=3, size_average=False, map_device=map_device),
