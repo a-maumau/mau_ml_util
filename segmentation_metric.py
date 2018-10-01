@@ -7,7 +7,6 @@ import torch.nn as nn
 import numpy as np
 
 eps = 1e-8
-
 CPU = torch.device('cpu')
 
 def pixel_accuracy(pred_labels, gt_labels, size_average=True, map_device=CPU):
@@ -34,7 +33,7 @@ def pixel_accuracy(pred_labels, gt_labels, size_average=True, map_device=CPU):
 
         return result
 
-def precision(pred_labels, gt_labels, class_num=2, size_average=True, only_class=None, ignore=[255],exclude_non_appear_class=True, map_device=CPU):
+def precision(pred_labels, gt_labels, class_num=2, size_average=True, only_class=None, ignore=[255], exclude_non_appear_class=True, map_device=CPU):
     """
     precision: TP/(TP+FP)
 
@@ -268,6 +267,18 @@ if __name__ == '__main__':
     else:
         map_device = torch.device('cpu')
 
+    """
+    outputs should be like this with following tensors
+        * means not in mask class
+
+        batch0 p: class0=0.5, class1=0.5, class2=1.0
+        batch1 p: class0=0.0*, class1=0.0*, class2=0.0
+        mean   p: class0=0.5, class1=0.5, class2=0.5
+
+        batch0 j: class0=0.25, class1=0.4, class2=1.0
+        batch1 j: class0=0.0*, class1=0.0*, class2=0.0
+        mean   j: class0=0.25, class1=0.4, class2=0.5
+    """
     input_tensor = [
                     [[0,1,1],
                      [0,2,2],
