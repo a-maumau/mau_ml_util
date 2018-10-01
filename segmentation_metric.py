@@ -278,8 +278,8 @@ if __name__ == '__main__':
                      [2,2,2]]
                 ]
 
-    p = torch.long(input_tensor).cuda(0)
-    g = torch.long(gt_tensor).cuda(0)
+    p = torch.LongTensor(input_tensor).cuda(device=map_device)
+    g = torch.LongTensor(gt_tensor).to(device=map_device)
 
     results = [
                 "pixel accuracy",
