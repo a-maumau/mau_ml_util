@@ -274,10 +274,9 @@ if __name__ == '__main__':
                      [2,2,2]]
                 ]
 
-    print("prediction tensor")
     p = torch.LongTensor(input_tensor)
-    print("ground truth tensor")
     g = torch.LongTensor(gt_tensor)
+
     results = [
                 "pixel accuracy",
                 pixel_accuracy(p, g),
@@ -289,8 +288,10 @@ if __name__ == '__main__':
                 jaccard_index(p, g, class_num=3, size_average=True),
                 jaccard_index(p, g, class_num=3, size_average=False)
               ]
-
+              
+    print("prediction tensor")
     print(p)
+    print("ground truth tensor")
     print(g)
     for result in results:
         print(result)
