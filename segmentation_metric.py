@@ -25,10 +25,10 @@ def pixel_accuracy(pred_labels, gt_labels, size_average=True, map_device=CPU):
     
     # same thing.
     if size_average:
-        return torch.mean(torch.mean((pred_labels.to(device=map_device, dtype=torch.float32)==gt_labels).view(batch_size, -1).to(device=map_device, dtype=torch.float32), dim=1), dim=0).item()
+        return torch.mean(torch.mean((pred_labels.to(device=map_device, dtype=torch.long)==gt_labels).view(batch_size, -1).to(device=map_device, dtype=torch.float32), dim=1), dim=0).item()
     else:
         result = []
-        batch_result = torch.mean((pred_labels.to(device=map_device, dtype=torch.float32)==gt_labels).view(batch_size, -1).to(device=map_device, dtype=torch.float32), dim=1)
+        batch_result = torch.mean((pred_labels.to(device=map_device, dtype=torch.long)==gt_labels).view(batch_size, -1).to(device=map_device, dtype=torch.float32), dim=1)
         for b in range(batch_size):
             result.append(batch_result[b].item())
 
