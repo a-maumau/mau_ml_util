@@ -76,6 +76,9 @@ def precision(pred_labels, gt_labels, class_num=2, size_average=True, only_class
             elif TPFP[batch_index] == 0 and cls_gt[batch_index] == 0: 
                 batch_result.append(1.0)
                 count += 1
+            elif TPFP[batch_index] == 0 and cls_gt[batch_index] != 0:
+                batch_result.append(0.0)
+                count += 1
             else:
                 batch_result.append(float(TP[batch_index])/float(TPFP[batch_index]))
                 count += 1
@@ -106,6 +109,9 @@ def precision(pred_labels, gt_labels, class_num=2, size_average=True, only_class
                     continue
                 elif TPFP[batch_index] == 0 and cls_gt[batch_index] == 0: 
                     batch_result.append(1.0)
+                    count += 1
+                elif TPFP[batch_index] == 0 and cls_gt[batch_index] != 0:
+                    batch_result.append(0.0)
                     count += 1
                 else:
                     batch_result.append(float(TP[batch_index])/float(TPFP[batch_index]))
