@@ -288,7 +288,7 @@ if __name__ == '__main__':
                      [2,2,2]]
                 ]
 
-    p = torch.LongTensor(input_tensor).cuda(device=map_device)
+    p = torch.LongTensor(input_tensor).to(device=map_device)
     g = torch.LongTensor(gt_tensor).to(device=map_device)
 
     start = time.time()
