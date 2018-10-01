@@ -259,7 +259,17 @@ class SoftDiceLoss(nn.Module):
 
 # test
 if __name__ == '__main__':
-    map_device = torch.device('cuda:0')
+    import time
+    import argparse
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-gpu', action="store_true", default=False, help='')
+    args = parser.parse_args()
+
+    if args.gpu:
+        map_device = torch.device('cuda')
+    else:
+        map_device = torch.device('cpu')
 
     input_tensor = [
                     [[0,1,1],
@@ -281,6 +291,7 @@ if __name__ == '__main__':
     p = torch.LongTensor(input_tensor).cuda(device=map_device)
     g = torch.LongTensor(gt_tensor).to(device=map_device)
 
+    start = time.time()
     results = [
                 "pixel accuracy",
                 pixel_accuracy(p, g, map_device=map_device),
@@ -292,6 +303,8 @@ if __name__ == '__main__':
                 jaccard_index(p, g, class_num=3, size_average=True, map_device=map_device),
                 jaccard_index(p, g, class_num=3, size_average=False, map_device=map_device)
               ]
+    elapsed_time = time.time() - start
+    print ("elapsed_time:{} sec".format(elapsed_time))
 
     print("prediction tensor")
     print(p)
