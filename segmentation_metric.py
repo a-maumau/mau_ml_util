@@ -303,6 +303,13 @@ if __name__ == '__main__':
                 jaccard_index(p, g, class_num=3, size_average=False, map_device=map_device)
               ]
 
+    print("prediction tensor")
+    print(p)
+    print("ground truth tensor")
+    print(g)
+    for result in results:
+        print(result)
+
     # speed check
     p = torch.randint(0, 10, (16, 512, 512)).to(device=map_device, dtype=torch.long)
     g = torch.randint(0, 10, (16, 512, 512)).to(device=map_device, dtype=torch.long)
@@ -314,10 +321,3 @@ if __name__ == '__main__':
               ]
     elapsed_time = time.time() - start
     print ("elapsed_time:{} sec".format(elapsed_time))
-
-    print("prediction tensor")
-    print(p)
-    print("ground truth tensor")
-    print(g)
-    for result in results:
-        print(result)
