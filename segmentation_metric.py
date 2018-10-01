@@ -25,10 +25,10 @@ def pixel_accuracy(pred_labels, gt_labels, size_average=True, map_device=CPU):
     
     # same thing.
     if size_average:
-        return torch.mean(torch.mean((pred_labels.to(device=map_device, dtype=torch.LongTensor)==gt_labels).view(batch_size, -1).to(device=map_device, dtype=torch.FloatTensor), dim=1), dim=0).item()
+        return torch.mean(torch.mean((pred_labels.to(device=map_device, dtype=torch.float32)==gt_labels).view(batch_size, -1).to(device=map_device, dtype=torch.float32), dim=1), dim=0).item()
     else:
         result = []
-        batch_result = torch.mean((pred_labels.to(device=map_device, dtype=torch.LongTensor)==gt_labels).view(batch_size, -1).to(device=map_device, dtype=torch.FloatTensor), dim=1)
+        batch_result = torch.mean((pred_labels.to(device=map_device, dtype=torch.float32)==gt_labels).view(batch_size, -1).to(device=map_device, dtype=torch.float32), dim=1)
         for b in range(batch_size):
             result.append(batch_result[b].item())
 
@@ -59,8 +59,8 @@ def precision(pred_labels, gt_labels, class_num=2, size_average=True, only_class
         batch_result = []
         class_id = only_class
 
-        class_mask = (gt_labels==class_id).view(batch_size, -1).to(device=map_device, dtype=torch.LongTensor) # 0,1 mask
-        pred_class = (pred_labels==class_id).view(batch_size, -1).to(device=map_device, dtype=torch.LongTensor) # 0,1 mask
+        class_mask = (gt_labels==class_id).view(batch_size, -1).to(device=map_device, dtype=torch.long) # 0,1 mask
+        pred_class = (pred_labels==class_id).view(batch_size, -1).to(device=map_device, dtype=torch.long) # 0,1 mask
         cls_gt = torch.sum(class_mask, dim=1)
 
         TP = torch.sum((pred_class*class_mask).view(batch_size, -1), dim=1)
@@ -93,8 +93,8 @@ def precision(pred_labels, gt_labels, class_num=2, size_average=True, only_class
             count = 0
             batch_result = []
 
-            class_mask = (gt_labels==class_id).view(batch_size, -1).to(device=map_device, dtype=torch.LongTensor) # 0,1 mask
-            pred_class = (pred_labels==class_id).view(batch_size, -1).to(device=map_device, dtype=torch.LongTensor) # 0,1 mask
+            class_mask = (gt_labels==class_id).view(batch_size, -1).to(device=map_device, dtype=torch.long) # 0,1 mask
+            pred_class = (pred_labels==class_id).view(batch_size, -1).to(device=map_device, dtype=torch.long) # 0,1 mask
             cls_gt = torch.sum(class_mask, dim=1)
 
             TP = torch.sum((pred_class*class_mask).view(batch_size, -1), dim=1).cpu()
@@ -140,8 +140,8 @@ def jaccard_index(pred_labels, gt_labels, class_num=2, size_average=True, only_c
 
         class_id = only_class
 
-        class_mask = (gt_labels==class_id).view(batch_size, -1).to(device=map_device, dtype=torch.LongTensor) # 0,1 mask
-        pred_class = (pred_labels==class_id).view(batch_size, -1).to(device=map_device, dtype=torch.LongTensor) # 0,1 mask
+        class_mask = (gt_labels==class_id).view(batch_size, -1).to(device=map_device, dtype=torch.long) # 0,1 mask
+        pred_class = (pred_labels==class_id).view(batch_size, -1).to(device=map_device, dtype=torch.long) # 0,1 mask
         
         intersection = torch.sum(pred_class*class_mask, dim=1)
         u_pred = torch.sum(pred_class, dim=1)
@@ -175,8 +175,8 @@ def jaccard_index(pred_labels, gt_labels, class_num=2, size_average=True, only_c
             count = 0
             batch_result = []
 
-            class_mask = (gt_labels==class_id).view(batch_size, -1).to(device=map_device, dtype=torch.LongTensor) # 0,1 mask
-            pred_class = (pred_labels==class_id).view(batch_size, -1).to(device=map_device, dtype=torch.LongTensor) # 0,1 mask
+            class_mask = (gt_labels==class_id).view(batch_size, -1).to(device=map_device, dtype=torch.long) # 0,1 mask
+            pred_class = (pred_labels==class_id).view(batch_size, -1).to(device=map_device, dtype=torch.long) # 0,1 mask
             
             intersection = torch.sum(pred_class*class_mask, dim=1)
             u_pred = torch.sum(pred_class, dim=1)
@@ -216,8 +216,8 @@ def dice_score(pred_labels, gt_labels):
     h = pred_labels.size()[2]
     batch_size = pred_labels.size()[0]
 
-    TP = torch.sum((pred_labels.type(torch.LongTensor)*gt_labels).view(batch_size, -1), dim=1).type(torch.FloatTensor)
-    FPFN = torch.sum((pred_labels.type(torch.LongTensor)!=gt_labels).view(batch_size, -1), dim=1).type(torch.FloatTensor)
+    TP = torch.sum((pred_labels.type(torch.long)*gt_labels).view(batch_size, -1), dim=1).type(torch.FloatTensor)
+    FPFN = torch.sum((pred_labels.type(torch.long)!=gt_labels).view(batch_size, -1), dim=1).type(torch.FloatTensor)
 
     # to avoid error at all-zero mask
     for batch_index in range(batch_size):
@@ -278,8 +278,8 @@ if __name__ == '__main__':
                      [2,2,2]]
                 ]
 
-    p = torch.LongTensor(input_tensor).cuda(0)
-    g = torch.LongTensor(gt_tensor).cuda(0)
+    p = torch.long(input_tensor).cuda(0)
+    g = torch.long(gt_tensor).cuda(0)
 
     results = [
                 "pixel accuracy",
