@@ -35,7 +35,7 @@ class SegmentationMetric(object):
                 print(tensor_1_class)
                 count = torch.sum(tensor_1_class)
                 print(count)
-                self.class_matrix[class_2_int,class_1_int] +=count
+                self.class_matrix[gt_class, pred_class] +=count
 
 # test
 if __name__ == '__main__':
@@ -78,6 +78,11 @@ if __name__ == '__main__':
                      [2,2,2],
                      [2,2,2]]
                 ]
+
+    print("prediction tensor")
+    print(p)
+    print("ground truth tensor")
+    print(g)
 
     p = torch.LongTensor(input_tensor).to(device=map_device)
     g = torch.LongTensor(gt_tensor).to(device=map_device)
