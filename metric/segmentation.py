@@ -37,7 +37,7 @@ class SegmentationMetric(object):
                 #print(count)
                 self.class_matrix[gt_class, pred_class] +=count
 
-    def l(self, pred_label, gt_label):
+    def l(self, pred_labels, gt_labels):
         batch_size = pred_labels.shape[0]
         class_matrix = torch.zeros(self.class_num, self.class_num).to(device=map_device, dtype=torch.long)
 
