@@ -126,6 +126,8 @@ class SegmentationMetric(object):
                                                 torch.sum(self.class_matrix[:, class_id]) -
                                                 self.class_matrix[class_id, class_id])).cpu().item()
 
+            print(type(iou["class_{}".format(class_id)]))
+
         return iou
 
     def calc_mean_precision(self, ignore=[255]):
