@@ -195,10 +195,10 @@ if __name__ == '__main__':
     m = SegmentationMetric(3)
     m(p, g)
 
-    print(m.calc_pix_acc)
-    print(m.calc_mean_pix_acc)
-    print(m.calc_mean_jaccard_index)
-    print(m.calc_mean_precision)
+    print(m.calc_pix_acc())
+    print(m.calc_mean_pix_acc())
+    print(m.calc_mean_jaccard_index())
+    print(m.calc_mean_precision())
 
 
     """
