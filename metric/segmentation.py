@@ -5,6 +5,7 @@
 import torch
 
 CPU = torch.device('cpu')
+NAN = float('nan')
 
 class SegmentationMetric(object):
     """
@@ -103,8 +104,11 @@ class SegmentationMetric(object):
             if class_id in ignore:
                 continue
 
-            mean_pix_acc["class_{}".format(class_id)] = (float(self.class_matrix[class_id, class_id].cpu().item()) /
-                                                         float(torch.sum(self.class_matrix[:, class_id]).cpu().item()))
+            all_class_id_pix = torch.sum(self.class_matrix[:, class_id]).cpu().item()
+            if all_class_id_pix == 0:
+                mean_pix_acc["class_{}".format(class_id)] = NAN
+            else:
+                mean_pix_acc["class_{}".format(class_id)] = (float(self.class_matrix[class_id, class_id].cpu().item())/float(all_class_id_pix))
 
         return mean_pix_acc
 
@@ -121,10 +125,11 @@ class SegmentationMetric(object):
             if class_id in ignore:
                 continue
 
-            iou["class_{}".format(class_id)] = (float(self.class_matrix[class_id, class_id].cpu().item()) /
-                                                float((torch.sum(self.class_matrix[class_id, :]) +
-                                                torch.sum(self.class_matrix[:, class_id]) -
-                                                self.class_matrix[class_id, class_id]).cpu().item()))
+            tpfpfn = (torch.sum(self.class_matrix[class_id, :])+torch.sum(self.class_matrix[:, class_id])-self.class_matrix[class_id, class_id]).cpu().item()
+            if tpfpfn == 0:
+                iou["class_{}".format(class_id)] = NAN
+            else:
+                iou["class_{}".format(class_id)] = (float(self.class_matrix[class_id, class_id].cpu().item())/float(tpfpfn))
 
             print(iou["class_{}".format(class_id)])
 
@@ -139,8 +144,11 @@ class SegmentationMetric(object):
             if class_id in ignore:
                 continue
 
-            precision["class_{}".format(class_id)] = (float(self.class_matrix[class_id, class_id].cpu().item()) /
-                                               float((torch.sum(self.class_matrix[class_id, :])-self.class_matrix[class_id, class_id]).cpu().item()))
+            tpfp = (torch.sum(self.class_matrix[class_id, :])-self.class_matrix[class_id, class_id]).cpu().item()
+            if tpfp == 0:
+                precision["class_{}".format(class_id)] = NAN
+            else:
+                precision["class_{}".format(class_id)] = (float(self.class_matrix[class_id, class_id].cpu().item())/float(tpfp))
 
         return precision
 
