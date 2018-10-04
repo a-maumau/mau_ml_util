@@ -121,10 +121,10 @@ class SegmentationMetric(object):
             if class_id in ignore:
                 continue
 
-            iou["class_{}".format(class_id)] = (float(self.class_matrix[class_id, class_id]) /
-                                               (torch.sum(self.class_matrix[class_id, :]) +
+            iou["class_{}".format(class_id)] = float(self.class_matrix[class_id, class_id].cpu().item()) /
+                                               float((torch.sum(self.class_matrix[class_id, :]) +
                                                 torch.sum(self.class_matrix[:, class_id]) -
-                                                self.class_matrix[class_id, class_id])).cpu().item()
+                                                self.class_matrix[class_id, class_id]).cpu().item())
 
             print(type(iou["class_{}".format(class_id)]))
 
