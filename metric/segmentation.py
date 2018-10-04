@@ -52,7 +52,7 @@ class SegmentationMetric(object):
                     class_matrix[class_2_int,class_1_int] +=count
 
         for batch in range(batch_size):
-            self.__add_to_matrix(pred_labels[batch], gt_labels[batch])
+            self.hist_per_batch(pred_labels[batch], gt_labels[batch])
 
         return class_matrix
 
