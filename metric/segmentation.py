@@ -205,6 +205,7 @@ if __name__ == '__main__':
     m = SegmentationMetric(3)
     m(p, g)
 
+    print(m.class_matrix)
     print(m.calc_pix_acc())
     print(m.calc_mean_pix_acc())
     print(m.calc_mean_jaccard_index())
