@@ -24,40 +24,18 @@ class SegmentationMetric(object):
         for gt_class_id in range(self.class_num):
             gt_class = torch.eq(gt_label, gt_class_id).to(dtype=torch.long)
 
-            #print("top for")
-            #print(tensor_2_class)
+            print("top for")
+            print(tensor_2_class)
 
             for pred_class_id in range(self.class_num):
                 pred_class = torch.eq(pred_label, pred_class_id).to(dtype=torch.long)
-                #print("intra for")
-                #print(tensor_1_class)
+                print("intra for")
+                print(tensor_1_class)
                 pred_class = torch.mul(gt_class, pred_class)
-                #print(tensor_1_class)
+                print(tensor_1_class)
                 count = torch.sum(pred_class)
-                #print(count)
-                self.class_matrix[pred_class_id, gt_class_id] +=count
-
-    def l(self, pred_labels, gt_labels):
-        batch_size = pred_labels.shape[0]
-        class_matrix = torch.zeros(self.class_num, self.class_num).to(device=map_device, dtype=torch.long)
-
-        def hist_per_batch(tensor_1, tensor_2, ignore_label=255, classes=3):
-            hist_tensor = torch.zeros(classes,classes).to(device=map_device, dtype=torch.long)
-            for class_2_int in range(classes):
-                tensor_2_class = torch.eq(tensor_2,class_2_int).long()
-                for class_1_int in range(classes):
-                    tensor_1_class = torch.eq(tensor_1,class_1_int).long()
-                    tensor_1_class = torch.mul(tensor_2_class,tensor_1_class)
-                    count = torch.sum(tensor_1_class)
-                    hist_tensor[class_2_int,class_1_int] +=count
-
-            return hist_tensor
-
-        for batch in range(batch_size):
-            a = hist_per_batch(pred_labels[batch], gt_labels[batch])
-            class_matrix = torch.add(class_matrix, a)
-
-        return class_matrix
+                print(count)
+                self.class_matrix[pred_class_id, gt_class_id] += count
 
 # test
 if __name__ == '__main__':
