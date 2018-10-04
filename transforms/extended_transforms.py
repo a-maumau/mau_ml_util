@@ -10,9 +10,9 @@ class AddGaussianNoise(object):
         self.noise_coeff = math.sqrt(percent/100.0)
 
     def __call__(self, input_img):
-        return self.__process(input_img)
+        return self._process(input_img)
 
-    def __process(self, input_img):
+    def _process(self, input_img):
         """
             input_img: PIL.Image.Image
         """
@@ -47,7 +47,7 @@ class RanmdomAddGaussianNoise(AddGaussianNoise):
 
     def __call__(self, input_img):
         if random.random() < self.prob:
-            return self.__process(input_img)
+            return self._process(input_img)
 
         return input_img
 
@@ -55,11 +55,11 @@ class GaussianBlur(object):
     def __init__(self, radius):
         self.radius = radius
 
-    def __blur(self, input_img, radius):
+    def _blur(self, input_img, radius):
         return input_img.filter(ImageFilter.GaussianBlur(radius))
 
     def __call__(self, input_img):
-        return self.__blur(input_img, self.radius)
+        return self._blur(input_img, self.radius)
 
 # add prob. and scaling to GaussianFilter
 class RanmdomGaussianBlur(GaussianBlur):
@@ -74,7 +74,7 @@ class RanmdomGaussianBlur(GaussianBlur):
         if random.random() < self.prob:
             radius = random.uniform(self.scale_min, self.scale_max)
 
-            return self.__blur(input_img, radius)
+            return self._blur(input_img, radius)
 
         return input_img
 
@@ -84,7 +84,7 @@ class LowpassFilter(object):
 
     # lowpass_filter is borrowed from
     # https://algorithm.joho.info/programming/python/opencv-fft-low-pass-filter-py/ 
-    def __lowpass_filter(self, img_array, size):
+    def _lowpass_filter(self, img_array, size):
         """
             img_array: numpy.ndarray:uint8
                 shape must be (width, height)
@@ -119,9 +119,9 @@ class LowpassFilter(object):
         img_array = np.asarray(input_img, dtype="uint8")
         img_array.flags.writeable = True
 
-        img_array[:,:,0] = self.__lowpass_filter(img_array[:,:,0], self.pass_size)
-        img_array[:,:,1] = self.__lowpass_filter(img_array[:,:,1], self.pass_size)
-        img_array[:,:,2] = self.__lowpass_filter(img_array[:,:,2], self.pass_size)
+        img_array[:,:,0] = self._lowpass_filter(img_array[:,:,0], self.pass_size)
+        img_array[:,:,1] = self._lowpass_filter(img_array[:,:,1], self.pass_size)
+        img_array[:,:,2] = self._lowpass_filter(img_array[:,:,2], self.pass_size)
 
         return Image.fromarray(np.uint8(np.clip(img_array, 0, 255)))
 
@@ -138,7 +138,7 @@ class RanmdomLowpassFilter(LowpassFilter):
         if random.random() < self.prob:
             size = random.uniform(self.scale_min, self.scale_max)
 
-            return self.__lowpass_filter(input_img, size)
+            return self._lowpass_filter(input_img, size)
 
         return input_img
 
@@ -176,4 +176,3 @@ if __name__ == '__main__':
     t = GaussianBlur(2.0)
     n_img = t(img)
     n_img.save("gaussian_blured.png")
-
