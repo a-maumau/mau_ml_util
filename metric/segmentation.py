@@ -109,6 +109,7 @@ if __name__ == '__main__':
     m(p, g)
 
     print(m.class_matrix)
+    print(m.l(p, g))
 
     """
     results = [
