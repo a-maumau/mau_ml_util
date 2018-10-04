@@ -35,7 +35,7 @@ class SegmentationMetric(object):
                 #print(tensor_1_class)
                 count = torch.sum(gt_class)
                 #print(count)
-                self.class_matrix[gt_class_id, pred_class_id] +=count
+                self.class_matrix[pred_class_id, gt_class_id] +=count
 
     def l(self, pred_labels, gt_labels):
         batch_size = pred_labels.shape[0]
