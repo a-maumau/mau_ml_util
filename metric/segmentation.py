@@ -24,12 +24,12 @@ class SegmentationMetric(object):
         for gt_class in range(self.class_num):
             tensor_2_class = torch.eq(gt_label, gt_class).to(dtype=torch.long)
 
-            print("top for")
+            #print("top for")
             #print(tensor_2_class)
 
             for pred_class in range(self.class_num):
                 tensor_1_class = torch.eq(pred_label, pred_class).to(dtype=torch.long)
-                print("intra for")
+                #print("intra for")
                 #print(tensor_1_class)
                 tensor_1_class = torch.mul(tensor_2_class, tensor_1_class)
                 #print(tensor_1_class)
@@ -38,6 +38,7 @@ class SegmentationMetric(object):
                 self.class_matrix[gt_class, pred_class] +=count
 
     def l(self, pred_label, gt_label):
+        batch_size = pred_labels.shape[0]
         class_matrix = torch.zeros(self.class_num, self.class_num).to(device=map_device, dtype=torch.long)
 
         def hist_per_batch(tensor_1, tensor_2, ignore_label=255, classes=21):
