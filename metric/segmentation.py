@@ -25,14 +25,14 @@ class SegmentationMetric(object):
             gt_class = torch.eq(gt_label, gt_class_id).to(dtype=torch.long)
 
             print("top for")
-            print(tensor_2_class)
+            print(gt_class)
 
             for pred_class_id in range(self.class_num):
                 pred_class = torch.eq(pred_label, pred_class_id).to(dtype=torch.long)
                 print("intra for")
-                print(tensor_1_class)
+                print(pred_class)
                 pred_class = torch.mul(gt_class, pred_class)
-                print(tensor_1_class)
+                print(pred_class)
                 count = torch.sum(pred_class)
                 print(count)
                 self.class_matrix[pred_class_id, gt_class_id] += count
