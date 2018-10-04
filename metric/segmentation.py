@@ -83,7 +83,7 @@ if __name__ == '__main__':
     g = torch.LongTensor(gt_tensor).to(device=map_device)
 
     m = SegmentationMetric(3)
-    m(p, g, map_device=map_device)
+    m(p, g)
 
     """
     results = [
