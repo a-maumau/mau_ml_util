@@ -42,7 +42,7 @@ class SegmentationMetric(object):
         class_matrix = torch.zeros(self.class_num, self.class_num).to(device=map_device, dtype=torch.long)
 
         def hist_per_batch(tensor_1, tensor_2, ignore_label=255, classes=3):
-            hist_tensor = torch.zeros(classes,classes).long()
+            hist_tensor = torch.zeros(classes,classes).to(device=map_device, dtype=torch.long)
             for class_2_int in range(classes):
                 tensor_2_class = torch.eq(tensor_2,class_2_int).long()
                 for class_1_int in range(classes):
