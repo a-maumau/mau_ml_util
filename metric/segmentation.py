@@ -93,8 +93,6 @@ class SegmentationMetric(object):
                 self.class_matrix[pred_class_id, gt_class_id] += count
 
     def calc_pix_acc(self):
-        print(float(torch.trace(self.class_matrix).cpu().item()))
-        print(float(torch.sum(self.class_matrix).cpu().item()))
         return float(torch.trace(self.class_matrix).cpu().item())/float(torch.sum(self.class_matrix).cpu().item())
 
     def calc_mean_pix_acc(self, ignore=[255]):
@@ -132,8 +130,6 @@ class SegmentationMetric(object):
                 iou["class_{}".format(class_id)] = NAN
             else:
                 iou["class_{}".format(class_id)] = (float(self.class_matrix[class_id, class_id].cpu().item())/float(tpfpfn))
-
-            print(iou["class_{}".format(class_id)])
 
         return iou
 
