@@ -90,6 +90,8 @@ if __name__ == '__main__':
     m = SegmentationMetric(3)
     m(p, g)
 
+    print(m.class_matrix)
+
     """
     results = [
                 "pixel accuracy",
