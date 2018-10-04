@@ -49,10 +49,11 @@ class SegmentationMetric(object):
                     tensor_1_class = torch.eq(tensor_1,class_1_int).long()
                     tensor_1_class = torch.mul(tensor_2_class,tensor_1_class)
                     count = torch.sum(tensor_1_class)
-                    class_matrix[class_2_int,class_1_int] +=count
+                    hist_tensor[class_2_int,class_1_int] +=count
 
         for batch in range(batch_size):
-            hist_per_batch(pred_labels[batch], gt_labels[batch])
+            a = hist_per_batch(pred_labels[batch], gt_labels[batch])
+            class_matrix = torch.add(class_matrix, a)
 
         return class_matrix
 
