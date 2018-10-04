@@ -85,14 +85,14 @@ if __name__ == '__main__':
         mean   j: class0=0.125, class1=0.2, class2=0.5
     """
     input_tensor = [
-                    [[0,1,1],
-                     [0,2,2],
-                     [1,1,2]],
+                    [[1,1,1],
+                     [0,1,0],
+                     [0,0,0]]
                     ]
     gt_tensor = [
-                    [[1,1,1],
-                     [0,2,2],
-                     [0,0,2]],
+                    [[2,2,2],
+                     [2,2,2],
+                     [2,2,2]]
                 ]
 
     p = torch.LongTensor(input_tensor).to(device=map_device)
