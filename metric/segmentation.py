@@ -142,7 +142,7 @@ class SegmentationMetric(object):
             if class_id in ignore:
                 continue
 
-            tpfp = (torch.sum(self.class_matrix[class_id, :])-self.class_matrix[class_id, class_id]).cpu().item()
+            tpfp = torch.sum(self.class_matrix[class_id, :]).cpu().item()
             if tpfp == 0:
                 precision["class_{}".format(class_id)] = NAN
             else:
