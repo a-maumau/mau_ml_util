@@ -103,8 +103,8 @@ class SegmentationMetric(object):
             if class_id in ignore:
                 continue
 
-            mean_pix_acc["class_{}".format(class_id)] = (self.class_matrix[class_id, class_id] /
-                                                         torch.sum(self.class_matrix[:, class_id])).cpu().item()
+            mean_pix_acc["class_{}".format(class_id)] = (float(self.class_matrix[class_id, class_id].cpu().item()) /
+                                                         float(torch.sum(self.class_matrix[:, class_id]).cpu().item()))
 
         return mean_pix_acc
 
@@ -122,7 +122,7 @@ class SegmentationMetric(object):
                 continue
 
             iou["class_{}".format(class_id)] = (float(self.class_matrix[class_id, class_id].cpu().item()) /
-                                               float((torch.sum(self.class_matrix[class_id, :]) +
+                                                float((torch.sum(self.class_matrix[class_id, :]) +
                                                 torch.sum(self.class_matrix[:, class_id]) -
                                                 self.class_matrix[class_id, class_id]).cpu().item()))
 
