@@ -91,7 +91,7 @@ class SegmentationMetric(object):
                 count = torch.sum(pred_class)
                 self.class_matrix[pred_class_id, gt_class_id] += count
 
-    def calc_pix_acc(hist_matrix):
+    def calc_pix_acc(self):
         return torch.trace(self.class_matrix)/torch.sum(self.class_matrix)
 
     def calc_mean_pix_acc(self, ignore=[255]):
