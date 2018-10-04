@@ -79,13 +79,13 @@ if __name__ == '__main__':
                      [2,2,2]]
                 ]
 
+    p = torch.LongTensor(input_tensor).to(device=map_device)
+    g = torch.LongTensor(gt_tensor).to(device=map_device)
+
     print("prediction tensor")
     print(p)
     print("ground truth tensor")
     print(g)
-
-    p = torch.LongTensor(input_tensor).to(device=map_device)
-    g = torch.LongTensor(gt_tensor).to(device=map_device)
 
     m = SegmentationMetric(3)
     m(p, g)
