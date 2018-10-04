@@ -140,7 +140,7 @@ class SegmentationMetric(object):
                 continue
 
             precision["class_{}".format(class_id)] = (float(self.class_matrix[class_id, class_id].cpu().item()) /
-                                               float(torch.sum(self.class_matrix[class_id, :])-self.class_matrix[class_id, class_id]).cpu().item())
+                                               float((torch.sum(self.class_matrix[class_id, :])-self.class_matrix[class_id, class_id]).cpu().item()))
 
         return precision
 
