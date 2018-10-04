@@ -22,13 +22,13 @@ class SegmentationMetric(object):
     # per batch
     def __add_to_matrix(self, pred_label, gt_label):
         for gt_class in range(self.class_num):
-            tensor_2_class = torch.eq(gt_labels, gt_class).to(dtype=torch.long)
+            tensor_2_class = torch.eq(gt_label, gt_class).to(dtype=torch.long)
 
             print("top for")
             print(tensor_2_class)
 
             for pred_class in range(self.class_num):
-                tensor_1_class = torch.eq(pred_labels, pred_class).to(dtype=torch.long)
+                tensor_1_class = torch.eq(pred_label, pred_class).to(dtype=torch.long)
                 print("intra for")
                 print(tensor_1_class)
                 tensor_1_class = torch.mul(tensor_2_class, tensor_1_class)
