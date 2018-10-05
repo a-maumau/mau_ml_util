@@ -36,6 +36,24 @@ class PairRandomHorizontalFlip(object):
 
         return input_img, target_img
 
+class PairRandomVerticalFlip(object):
+    def __init__(self, p=0.5):
+        self.p = p
+
+    def __call__(self, img, target_img):
+        """
+        Args:
+            img (PIL Image): Image to be flipped.
+        Returns:
+            PIL Image: Randomly flipped image.
+        """
+        if random.random() < self.p:
+            return F.vflip(img), F.vflip(target_img)
+        return img, target_img
+
+    def __repr__(self):
+        return self.__class__.__name__ + '(p={})'.format(self.p)
+
 class PairCenterCrop(object):
     def __init__(self, size):
         if isinstance(size, numbers.Number):
