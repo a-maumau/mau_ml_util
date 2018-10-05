@@ -1,4 +1,7 @@
 import abc
+
+import torch
+
 from tqdm import tqdm
 
 from ..train_logger import TrainLogger
