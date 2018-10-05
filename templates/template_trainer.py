@@ -3,6 +3,8 @@ from tqdm import tqdm
 
 from ..train_logger import TrainLogger
 
+CPU = torch.device('cpu')
+
 class Template_Trainer:
     __metaclass__ = abc.ABCMeta
 
@@ -40,15 +42,11 @@ class Template_Trainer:
     def get_argparse_arguments(self, args):
         return args._get_kwargs()
 
-    def format_tensor(self, x, requires_grad=True, nogpu=False, gpu_device_num=0):
-        if torch.cuda.is_available() and not nogpu:
-            if not requires_grad:
-                x = x.cuda(gpu_device_num).detach()
-            else:
-                x = x.cuda(gpu_device_num)
+    def format_tensor(self, x, requires_grad=True, map_device=CPU):
+        if not requires_grad:
+            x = x.to(map_device).detach()
         else:
-            if not requires_grad:
-                x = x.detach()
+            x = x.to(map_device)
 
         return x
 
