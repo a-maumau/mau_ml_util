@@ -185,7 +185,7 @@ class RandomResizedCrop(object):
         Returns:
             PIL Image: Randomly cropped and resized image.
         """
-        i, j, h, w = self.get_params(img, self.scale, self.ratio)
+        i, j, h, w = self.get_params(input_img, self.scale, self.ratio)
         return F.resized_crop(input_img, i, j, h, w, self.size, self.interpolation), F.resized_crop(target_img, i, j, h, w, self.size, Image.NEAREST)
 
     def __repr__(self):
