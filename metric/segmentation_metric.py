@@ -171,7 +171,7 @@ if __name__ == '__main__':
                 class        0         1         2
                     p: 0.1428571...   0.25      1.0
                     j: 0.111...       0.222...  0.25
-         mean pix acc: 0.333...       0.666...  0.25
+         mean pix acc: 0.111...       0.222...  0.0833...
     """
     pred_tensor = [
                     [[0,1,1],
@@ -197,12 +197,6 @@ if __name__ == '__main__':
     print(p)
     print("ground truth tensor")
     print(g)
-
-    print((p==0)*(g==0))
-    print((p==0)*(g==1))
-    print((p==0)*(g==2))
-    print((p==1)*(g==0))
-    print((p==1)*(g==1))
 
     m = SegmentationMetric(3)
     m(p, g)

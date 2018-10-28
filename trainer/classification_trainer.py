@@ -16,6 +16,25 @@ torch.backends.cudnn.benchmark = True
 
 class ClassificationTrainer(Template_Trainer):
     def __init__(self, args, model, optimizer, lr_policy, train_loader, val_loader, map_device=CPU):
+        """
+            args: namespace (parser.parse_args())
+
+            model: torch.nn.module (inherit mau_ml_util.templates.model_template)
+
+            optimizer: torch.optim
+
+            lr_policy: mau_ml_util.policy.learning_rate_policy
+
+            train_loader: torch.utils.data.Dataset
+                loader must return (image: torch.float, label: tuple)
+
+            val_loader: torch.utils.data.Dataset
+                loader must return (image: torch.float, label: tuple, original_image: torch.long)
+
+            map_device: torch.device
+                data will be mapped at map_decice
+        """
+
         self.args = args
         if len(self.args.notify_mention) > 0:
             self.args.notify_mention += " "
@@ -47,15 +66,8 @@ class ClassificationTrainer(Template_Trainer):
 
         self.cmap = self._gen_cmap()
 
-        #policy_args = self.gen_policy_args(optimizer=self.optimizer, args=self.args)
-        #self.lr_policy = lr_policy(**policy_args)
         self.lr_policy = lr_policy
         self.iter_wise = self.lr_policy.iteration_wise
-
-        if self.args.show_parameters:
-            for idx, m in enumerate(model.modules()):
-                print(idx, '->', m)
-            print(args)
 
         print("\nsaving at {}\n".format(self.save_dir))
 
@@ -82,7 +94,7 @@ class ClassificationTrainer(Template_Trainer):
             self.tlog.pack_output(None, desc, desc_items)
             self.tlog.flush_output()
 
-    # callback for each iteration or epochs
+    # callback for each iteration or epoch
     def check_regulation(self, wise_type, decay_arg, num, total_loss, data_num, show_log_every=1):
         # decay
         self.lr_policy.decay_lr(**decay_arg)
@@ -152,18 +164,20 @@ class ClassificationTrainer(Template_Trainer):
     def train(self):
         self.tlog.notify("{}{}: start training".format(self.args.notify_mention, self.args.save_name))
 
-        epochs = self.to_tqdm(range(1, self.args.epochs+1), desc="[train::{}]".format(self.args.save_name), quiet=self.args.quiet):
+        data_num = len(self.train_loader)
+        epoch_num = self.calc_iter_to_epoch(data_num, self.args.max_iter) if self.iter_wise else self.args.epochs
+        epochs = self.to_tqdm(range(1, epoch_num+1), desc="[train::{}]".format(self.args.save_name), quiet=self.args.quiet)
 
         epoch = 0
         curr_iter = 0
         total_loss = 0.0
 
         # for epoch wise and iter wise
+        # because of existing option of forcing iter/epoch wise, we need pass them both
         decay_arg = {"curr_iter":curr_iter, "curr_epoch":epoch}
 
         for epoch in epochs:
             _train_loader = self.to_tqdm(self.train_loader, desc="", quiet=self.args.quiet):
-            data_num = len(_train_loader)
 
             for img, label in _train_loader:
                 self.optimizer.zero_grad()
@@ -189,6 +203,9 @@ class ClassificationTrainer(Template_Trainer):
                     if curr_iter % self.args.show_log_every_iter == 0:
                         total_loss = 0.0
                         data_num = 0
+
+                    if curr_iter == self.args.max_iter:
+                        break
 
                 # for printing batch result
                 if not self.args.quiet:

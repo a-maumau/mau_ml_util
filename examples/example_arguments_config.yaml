@@ -1,55 +1,62 @@
 arguments:
-################################
-# saveing setting
-# 
-- save_name: train
-- save_dir: log
-- save_every: 10
-################################
-# logging count
-#
-- trainval_every: 5 
-- show_log_every_iter: 1000 
-- validation_sample_batch_num: 1 
-################################
-# training setting
-#
-- epochs: 100 
-- max_iter: 200000 
-- decay_every: 30 
-- batch_size: 4 
-- num_workers: 4 
-- class_num: 21 
-# 
-- learning_rate: 0.001 
-- min_learning_rate: 0.001 
-- lr_decay_power: 0.9 
-- decay_value: 0.1
-- lr_hp_k: 1.0 
-################################
-# gpu number
-#
-- gpu_device_num: 0 
-################################
-# setting of visualization
-#
-- viz_fetch_stride: 1 
-- http_server_port: 8080 
-- msg_server_port: 8081 
-################################
-# notification
-#
-- notify_mention: ""
-- notify_type:
-  - slack
-################################
-# flag option
-#
-- nogpu: false
-- show_parameters: false
-- quiet: false
-- use_http_server: false
-- use_msg_server: false
-# 
-- force_lr_policy_iter_wise: false
-- force_lr_policy_epoch_wise: false
+  ################################
+  # paths
+  #
+  - img_root: image
+  - mask_root: mask
+  - img_list_path: null
+  - dataset_pickle_path: null
+  ################################
+  # saving setting
+  # 
+  - save_name: train
+  - save_dir: log
+  - save_every: 10
+  ################################
+  # logging count
+  #
+  - trainval_every: 5 
+  - show_log_every_iter: 1000 
+  - validation_sample_batch_num: 1 
+  ################################
+  # training setting
+  #
+  - epochs: 100 
+  - max_iter: 200000 
+  - decay_every: 30 
+  - batch_size: 4 
+  - num_workers: 4 
+  - class_num: 2
+  # 
+  - learning_rate: 0.001 
+  - min_learning_rate: 0.001 
+  - lr_decay_power: 0.9 
+  - decay_value: 0.1
+  - lr_hp_k: 1.0 
+  ################################
+  # gpu number
+  #
+  - gpu_device_num: 0 
+  ################################
+  # setting of visualization
+  #
+  - viz_fetch_stride: 1 
+  - http_server_port: 8080 
+  - msg_server_port: 8081 
+  ################################
+  # notification
+  #
+  - notify_mention: ''
+  - notify_type:
+    - slack
+  ################################
+  # flag option
+  #
+  - nogpu: false
+  - show_parameters: false
+  - quiet: false
+  - use_http_server: false
+  - use_msg_server: false
+  # 
+  - force_lr_policy_iter_wise: false
+  - force_lr_policy_epoch_wise: false
