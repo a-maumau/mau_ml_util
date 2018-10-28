@@ -109,7 +109,7 @@ class SegmentationMetric(object):
             if all_class_id_pix == 0:
                 mean_pix_acc["class_{}".format(class_id)] = NAN
             else:
-                mean_pix_acc["class_{}".format(class_id)] = (float(self.confusion_matrix[class_id, class_id].cpu().item())/float(all_class_id_pix))
+                mean_pix_acc["class_{}".format(class_id)] = (float(self.confusion_matrix[class_id, class_id].cpu().item())/float(all_class_id_pix))/self.class_num
 
         return mean_pix_acc
 
@@ -167,14 +167,11 @@ if __name__ == '__main__':
 
     """
         following tensors outputs should be like this
-
-        batch0 p: class0=0.5, class1=0.5, class2=1.0
-        batch1 p: class0=0.0, class1=0.0, class2=0.0
-        mean   p: class0=0.25, class1=0.25, class2=0.5
-
-        batch0 j: class0=0.25, class1=0.4, class2=1.0
-        batch1 j: class0=0.0, class1=0.0, class2=0.0
-        mean   j: class0=0.125, class1=0.2, class2=0.5
+        pixel acc: 0.333...
+                class        0         1         2
+                    p: 0.1428571...   0.25      1.0
+                    j: 0.111...       0.222...  0.25
+         mean pix acc: 0.333...       0.666...  0.25
     """
     pred_tensor = [
                     [[0,1,1],
