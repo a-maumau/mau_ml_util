@@ -7,8 +7,9 @@ def read_arguments_from_yaml(args, config_path):
             config = yaml.load(f)
 
         for config_arg in config["arguments"]:
-            if config_arg.key() in args:
-                args[config_arg.key()] = config_arg.value()
+            (key, val) = onfig_arg.items()[0]
+            if key in args:
+                args[key] = val
     except Exception as e:
         print(e)
         print("cannot read config file.")
