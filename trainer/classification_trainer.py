@@ -1,6 +1,6 @@
 from ..train_logger import TrainLogger
 from ..metric import ClassificationMetric
-from ..templates import Template_Trainer
+from ..templates.trainer_template import Template_Trainer
 
 import os
 from datetime import datetime
