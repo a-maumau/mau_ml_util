@@ -1,12 +1,5 @@
 arguments:
   ################################
-  # paths
-  #
-  - img_root: image
-  - mask_root: mask
-  - img_list_path: null
-  - dataset_pickle_path: null
-  ################################
   # saving setting
   # 
   - save_name: train
