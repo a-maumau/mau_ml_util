@@ -177,7 +177,7 @@ class ClassificationTrainer(Template_Trainer):
         decay_arg = {"curr_iter":curr_iter, "curr_epoch":epoch}
 
         for epoch in epochs:
-            _train_loader = self.to_tqdm(self.train_loader, desc="", quiet=self.args.quiet):
+            _train_loader = self.to_tqdm(self.train_loader, desc="", quiet=self.args.quiet)
 
             for img, label in _train_loader:
                 self.optimizer.zero_grad()
