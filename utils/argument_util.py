@@ -7,7 +7,7 @@ def read_arguments_from_yaml(args, config_path):
             config = yaml.load(f)
 
         for config_arg in config["arguments"]:
-            (key, val) = config_arg.items()[0]
+            (key, val) = config_arg.items()
             if key in args:
                 args[key] = val
     except Exception as e:
