@@ -1,4 +1,5 @@
-from ..templates.template_data_loader import Template_SegmentationTestLoader
+"""
+from ..templates.data_loader_template import Template_SegmentationTestLoader
 
 class SegmentationTestLoader(Template_SegmentationTestLoader):
     def __init__(self, img_root, input_transform=None):
@@ -20,3 +21,5 @@ class SegmentationTestLoader(Template_SegmentationTestLoader):
 
     def __len__(self):
         return self.data_num
+"""
+pass
