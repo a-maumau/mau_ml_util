@@ -10,5 +10,5 @@ def read_arguments_from_yaml(args, config_path):
             if config_arg.key() in args:
                 args[config_arg.key()] = config_arg.value()
     except Exception as e:
-    	print(e)
+        print(e)
         print("cannot read config file.")
