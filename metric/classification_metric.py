@@ -129,11 +129,10 @@ if __name__ == '__main__':
     print("ground truth tensor")
     print(g)
 
-    m = BinaryClassificationMetric()
+    m = ClassificationMetric(3)
     m(p, g)
 
     print(m.class_matrix)
     print(m.calc_acc())
     print(m.calc_precision())
     print(m.calc_recall())
-    
