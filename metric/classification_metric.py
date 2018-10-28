@@ -106,29 +106,19 @@ if __name__ == '__main__':
     """
         following tensors outputs should be like this
 
-        batch0 p: class0=0.5, class1=0.5, class2=1.0
-        batch1 p: class0=0.0, class1=0.0, class2=0.0
-        mean   p: class0=0.25, class1=0.25, class2=0.5
-
-        batch0 j: class0=0.25, class1=0.4, class2=1.0
-        batch1 j: class0=0.0, class1=0.0, class2=0.0
-        mean   j: class0=0.125, class1=0.2, class2=0.5
+        acc = 0.555...
+        precision = 0.666...
+        recall = 0.666...
     """
     pred_tensor = [
-                    [[0,1,1],
-                     [0,2,2],
-                     [1,1,2]],
-                    [[1,1,1],
-                     [0,1,0],
-                     [0,0,0]]
-                    ]
+                    [0,1,1],
+                    [0,1,0],
+                    [1,1,1],
+                   ]
     gt_tensor = [
-                    [[1,1,1],
-                     [0,2,2],
-                     [0,0,2]],
-                    [[2,2,2],
-                     [2,2,2],
-                     [2,2,2]]
+                    [1,1,1],
+                    [0,0,1],
+                    [1,0,1],
                 ]
 
     p = torch.LongTensor(pred_tensor).to(device=map_device)
@@ -139,45 +129,11 @@ if __name__ == '__main__':
     print("ground truth tensor")
     print(g)
 
-    m = SegmentationMetric(3)
+    m = BinaryClassificationMetric()
     m(p, g)
 
-    print(m.confusion_matrix)
-    print(m.calc_pix_acc())
-    print(m.calc_mean_pix_acc())
-    print(m.calc_mean_jaccard_index())
-    print(m.calc_mean_precision())
-
-
-    """
-    results = [
-                "pixel accuracy",
-                pixel_accuracy(p, g, map_device=map_device),
-                pixel_accuracy(p, g, size_average=False, map_device=map_device),
-                "precision",
-                precision(p, g, class_num=3, size_average=True, map_device=map_device),
-                precision(p, g, class_num=3, size_average=False, map_device=map_device),
-                "jaccard index",
-                jaccard_index(p, g, class_num=3, size_average=True, map_device=map_device),
-                jaccard_index(p, g, class_num=3, size_average=False, map_device=map_device)
-              ]
-
-    print("prediction tensor")
-    print(p)
-    print("ground truth tensor")
-    print(g)
-    for result in results:
-        print(result)
-
-    # speed check
-    p = torch.randint(0, 10, (16, 512, 512)).to(device=map_device, dtype=torch.long)
-    g = torch.randint(0, 10, (16, 512, 512)).to(device=map_device, dtype=torch.long)
-    start = time.time()
-    results = [
-                pixel_accuracy(p, g, map_device=map_device),
-                precision(p, g, class_num=3, size_average=True, map_device=map_device),
-                jaccard_index(p, g, class_num=3, size_average=True, map_device=map_device)
-              ]
-    elapsed_time = time.time() - start
-    print ("elapsed_time:{} sec".format(elapsed_time))
-    """
+    print(m.class_matrix)
+    print(m.calc_acc())
+    print(m.calc_precision())
+    print(m.calc_recall())
+    

@@ -79,6 +79,10 @@ class SegmentationMetric(object):
 
     # per batch
     def __add_to_matrix(self, pred_label, gt_label):
+        for p_index in range(self.class_num):
+            for gt_index in range(self.class_num):
+                self.confusion_matrix[p_index, gt_index] += torch.sum((pred_label==p_index)*(gt_label==gt_index))
+        """
         for gt_class_id in range(self.class_num):
             gt_class = torch.eq(gt_label, gt_class_id).to(dtype=torch.long)
 
@@ -87,7 +91,8 @@ class SegmentationMetric(object):
                 pred_class = torch.mul(gt_class, pred_class)
                 count = torch.sum(pred_class)
                 self.class_matrix[pred_class_id, gt_class_id] += count
-
+        """
+        
     def calc_pix_acc(self):
         return float(torch.trace(self.class_matrix).cpu().item())/float(torch.sum(self.class_matrix).cpu().item())
 
@@ -204,37 +209,3 @@ if __name__ == '__main__':
     print(m.calc_mean_pix_acc())
     print(m.calc_mean_jaccard_index())
     print(m.calc_mean_precision())
-
-
-    """
-    results = [
-                "pixel accuracy",
-                pixel_accuracy(p, g, map_device=map_device),
-                pixel_accuracy(p, g, size_average=False, map_device=map_device),
-                "precision",
-                precision(p, g, class_num=3, size_average=True, map_device=map_device),
-                precision(p, g, class_num=3, size_average=False, map_device=map_device),
-                "jaccard index",
-                jaccard_index(p, g, class_num=3, size_average=True, map_device=map_device),
-                jaccard_index(p, g, class_num=3, size_average=False, map_device=map_device)
-              ]
-
-    print("prediction tensor")
-    print(p)
-    print("ground truth tensor")
-    print(g)
-    for result in results:
-        print(result)
-
-    # speed check
-    p = torch.randint(0, 10, (16, 512, 512)).to(device=map_device, dtype=torch.long)
-    g = torch.randint(0, 10, (16, 512, 512)).to(device=map_device, dtype=torch.long)
-    start = time.time()
-    results = [
-                pixel_accuracy(p, g, map_device=map_device),
-                precision(p, g, class_num=3, size_average=True, map_device=map_device),
-                jaccard_index(p, g, class_num=3, size_average=True, map_device=map_device)
-              ]
-    elapsed_time = time.time() - start
-    print ("elapsed_time:{} sec".format(elapsed_time))
-    """
