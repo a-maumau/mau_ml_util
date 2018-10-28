@@ -92,7 +92,7 @@ class SegmentationMetric(object):
                 count = torch.sum(pred_class)
                 self.confusion_matrix[pred_class_id, gt_class_id] += count
         """
-        
+
     def calc_pix_acc(self):
         return float(torch.trace(self.confusion_matrix).cpu().item())/float(torch.sum(self.confusion_matrix).cpu().item())
 
@@ -200,6 +200,12 @@ if __name__ == '__main__':
     print(p)
     print("ground truth tensor")
     print(g)
+
+    print((p==0)*(g==0))
+    print((p==0)*(g==1))
+    print((p==0)*(g==2))
+    print((p==1)*(g==0))
+    print((p==1)*(g==1))
 
     m = SegmentationMetric(3)
     m(p, g)
