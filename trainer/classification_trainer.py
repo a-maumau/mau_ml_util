@@ -124,7 +124,7 @@ class ClassificationTrainer(Template_Trainer):
         recall_class = []
         
         metric = SegmentationMetric(self.args.class_num, map_device=self.map_device)
-        _trainval_loader = self.to_tqdm(self.val_loader, desc="train val", quiet=self.args.quiet):
+        _trainval_loader = self.to_tqdm(self.val_loader, desc="train val", quiet=self.args.quiet)
 
         for b, (img, label, original_image) in enumerate(_trainval_loader):
             batch_size = image.shape[0]
