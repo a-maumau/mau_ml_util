@@ -8,9 +8,4 @@ class SegmentationDatasetLoader(Template_SegmentationDatasetLoader):
                        pickle_path_data=False, pickle_path_relative=False,
                        return_original=False):
 
-    super(SegmentationDatasetLoader, self).__init__(img_root, mask_root, img_list_path, dataset_pickle_path,
-                                                    pair_transform, input_transform, target_transform,
-                                                    load_all_in_ram, img_ext, mask_ext, img_convert_type,
-                                                    pickle_img_key, pickle_mask_key,
-                                                    pickle_path_data, pickle_path_relative,
-                                                    return_original)
+    super(SegmentationDatasetLoader, self).__init__(img_root, mask_root, img_list_path, dataset_pickle_path,pair_transform, input_transform, target_transform,load_all_in_ram, img_ext, mask_ext, img_convert_type,pickle_img_key, pickle_mask_key,pickle_path_data, pickle_path_relative,return_original)
