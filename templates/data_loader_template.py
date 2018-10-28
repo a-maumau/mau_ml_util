@@ -1,4 +1,4 @@
-from ..utils.path_util import path_join
+from ..utils.path_util import path_join, list_dir
 
 import pickle
 from PIL import Image
@@ -271,7 +271,7 @@ class Template_SegmentationDatasetLoader(data.Dataset):
         if dataset_pickle_path is None:
             if img_list_path is None:
                 name_list = []
-                image_list = os.listdir(path_join(img_root))
+                image_list = list_dir(path_join(img_root))
                 for name in image_list:
                     name_list.append(name.replace(img_ext, "").replace(mask_ext, ""))
 
