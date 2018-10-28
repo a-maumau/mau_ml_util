@@ -282,7 +282,7 @@ class Template_SegmentationDatasetLoader(data.Dataset):
                     image_list = file.readlines()
                     image_list = [img_name.rstrip("\n") for img_name in image_list]
 
-            for img_name in image_names:
+            for img_name in image_list:
                 try:
                     if self.load_all_in_ram:
                         img = Image.open(path_join(img_root, img_name+img_ext)).convert(self.img_convert_type)
