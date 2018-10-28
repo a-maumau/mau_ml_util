@@ -14,4 +14,4 @@ def path_join(*paths):
 	return os.path.join(*paths)
 
 def list_dir(path):
-	return os.listdir(path)
+	return os.listdir(os.path.abspath(path))
