@@ -52,7 +52,7 @@ class Template_Model(nn.Module):
                 print("done.")
 
             except Exception as e:
-                print("\n"+e+"\n")
+                print("\n"+"{}".format(e)+"\n")
                 traceback.print_exc()
                 print("cannot load pretrained data.")
 

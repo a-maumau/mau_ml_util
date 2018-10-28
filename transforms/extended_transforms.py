@@ -142,6 +142,19 @@ class RanmdomLowpassFilter(LowpassFilter):
 
         return input_img
 
+class Random90degreeRotation(object):
+    def __init__(self, prob=0.5):
+        self.prob = prob
+        
+    def __call__(self, input_img):
+        if random.random() < self.prob:
+            if random.random() < 0.5:
+                return input_img.rotate(90)
+            else:
+                return input_img.rotate(-90)
+
+        return input_img
+
 # not yet.
 """
 class MedianFilter(object):
