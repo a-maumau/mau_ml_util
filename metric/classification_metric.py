@@ -132,7 +132,7 @@ if __name__ == '__main__':
     m = ClassificationMetric(3)
     m(p, g)
 
-    print(m.class_matrix)
+    print(m.confusion_matrix)
     print(m.calc_acc())
     print(m.calc_precision())
     print(m.calc_recall())
