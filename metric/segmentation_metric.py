@@ -72,7 +72,7 @@ class SegmentationMetric(object):
         self.class_num = class_num
         self.map_device = map_device
 
-        self.class_matrix = torch.zeros(self.class_num, self.class_num).to(device=map_device, dtype=torch.long)
+        self.confusion_matrix = torch.zeros(self.class_num, self.class_num).to(device=map_device, dtype=torch.long)
 
     def __call__(self, pred_labels, gt_labels):
         self.__add_to_matrix(pred_labels, gt_labels)
@@ -90,11 +90,11 @@ class SegmentationMetric(object):
                 pred_class = torch.eq(pred_label, pred_class_id).to(dtype=torch.long)
                 pred_class = torch.mul(gt_class, pred_class)
                 count = torch.sum(pred_class)
-                self.class_matrix[pred_class_id, gt_class_id] += count
+                self.confusion_matrix[pred_class_id, gt_class_id] += count
         """
         
     def calc_pix_acc(self):
-        return float(torch.trace(self.class_matrix).cpu().item())/float(torch.sum(self.class_matrix).cpu().item())
+        return float(torch.trace(self.confusion_matrix).cpu().item())/float(torch.sum(self.confusion_matrix).cpu().item())
 
     def calc_mean_pix_acc(self, ignore=[255]):
         if isinstance(ignore, int):
@@ -105,11 +105,11 @@ class SegmentationMetric(object):
             if class_id in ignore:
                 continue
 
-            all_class_id_pix = torch.sum(self.class_matrix[:, class_id]).cpu().item()
+            all_class_id_pix = torch.sum(self.confusion_matrix[:, class_id]).cpu().item()
             if all_class_id_pix == 0:
                 mean_pix_acc["class_{}".format(class_id)] = NAN
             else:
-                mean_pix_acc["class_{}".format(class_id)] = (float(self.class_matrix[class_id, class_id].cpu().item())/float(all_class_id_pix))
+                mean_pix_acc["class_{}".format(class_id)] = (float(self.confusion_matrix[class_id, class_id].cpu().item())/float(all_class_id_pix))
 
         return mean_pix_acc
 
@@ -126,11 +126,11 @@ class SegmentationMetric(object):
             if class_id in ignore:
                 continue
 
-            tpfpfn = (torch.sum(self.class_matrix[class_id, :])+torch.sum(self.class_matrix[:, class_id])-self.class_matrix[class_id, class_id]).cpu().item()
+            tpfpfn = (torch.sum(self.confusion_matrix[class_id, :])+torch.sum(self.confusion_matrix[:, class_id])-self.confusion_matrix[class_id, class_id]).cpu().item()
             if tpfpfn == 0:
                 iou["class_{}".format(class_id)] = NAN
             else:
-                iou["class_{}".format(class_id)] = (float(self.class_matrix[class_id, class_id].cpu().item())/float(tpfpfn))
+                iou["class_{}".format(class_id)] = (float(self.confusion_matrix[class_id, class_id].cpu().item())/float(tpfpfn))
 
         return iou
 
@@ -143,11 +143,11 @@ class SegmentationMetric(object):
             if class_id in ignore:
                 continue
 
-            tpfp = torch.sum(self.class_matrix[class_id, :]).cpu().item()
+            tpfp = torch.sum(self.confusion_matrix[class_id, :]).cpu().item()
             if tpfp == 0:
                 precision["class_{}".format(class_id)] = NAN
             else:
-                precision["class_{}".format(class_id)] = (float(self.class_matrix[class_id, class_id].cpu().item())/float(tpfp))
+                precision["class_{}".format(class_id)] = (float(self.confusion_matrix[class_id, class_id].cpu().item())/float(tpfp))
 
         return precision
 
@@ -204,7 +204,7 @@ if __name__ == '__main__':
     m = SegmentationMetric(3)
     m(p, g)
 
-    print(m.class_matrix)
+    print(m.confusion_matrix)
     print(m.calc_pix_acc())
     print(m.calc_mean_pix_acc())
     print(m.calc_mean_jaccard_index())
