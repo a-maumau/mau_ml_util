@@ -129,7 +129,7 @@ if __name__ == '__main__':
     print("ground truth tensor")
     print(g)
 
-    m = ClassificationMetric(3)
+    m = ClassificationMetric(2)
     m(p, g)
 
     print(m.confusion_matrix)
