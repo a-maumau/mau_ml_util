@@ -1,4 +1,4 @@
-from ..templates.template_data_loader import Template_ClassificationDatasetLoader
+from ..templates.data_loader_template import Template_ClassificationDatasetLoader
 
 class ClassificationDatasetLoader(Template_ClassificationDatasetLoader):
     def __init__(self, img_root, img_list_path, dataset_pickle_path=None,
