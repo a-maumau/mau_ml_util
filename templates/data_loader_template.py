@@ -276,7 +276,7 @@ class Template_SegmentationDatasetLoader(data.Dataset):
                     name_list.append(name.replace(img_ext, "").replace(mask_ext, ""))
 
                 # to erase duplication of names
-                image_list = list(set(*name_list))
+                image_list = list(set(name_list))
             else:
                 with open(path_join(img_list_path), "r") as file:
                     image_list = file.readlines()
