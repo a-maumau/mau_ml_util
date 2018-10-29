@@ -8,7 +8,7 @@ class ClassificationDatasetLoader(Template_ClassificationDatasetLoader):
                        pickle_path_data=False, pickle_path_relative=False,
                        return_original=False):
 
-        super(SegmentationDatasetLoader, self).__init__(img_root, img_list_path, dataset_pickle_path,
+        super(ClassificationDatasetLoader, self).__init__(img_root, img_list_path, dataset_pickle_path,
                                                         input_transform,
                                                         load_all_in_ram, img_ext, img_convert_type1,
                                                         pickle_img_key, pickle_label_key,
