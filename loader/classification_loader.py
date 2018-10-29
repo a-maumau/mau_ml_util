@@ -9,8 +9,8 @@ class ClassificationDatasetLoader(Template_ClassificationDatasetLoader):
                        return_original=False):
 
         super(ClassificationDatasetLoader, self).__init__(img_root, img_list_path, dataset_pickle_path,
-                                                        input_transform,
-                                                        load_all_in_ram, img_ext, img_convert_type,
-                                                        pickle_img_key, pickle_label_key,
-                                                        pickle_path_data, pickle_path_relative,
-                                                        return_original)
+                                                          input_transform,
+                                                          load_all_in_ram, img_ext, img_convert_type,
+                                                          pickle_img_key, pickle_label_key,
+                                                          pickle_path_data, pickle_path_relative,
+                                                          return_original)

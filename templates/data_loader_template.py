@@ -12,8 +12,7 @@ class Template_ClassificationDatasetLoader(data.Dataset):
                        input_transform=None,
                        load_all_in_ram=True, img_ext=".jpg", img_convert_type="RGB",
                        pickle_img_key="image", pickle_label_key="label",
-                       pickle_path_data=False, pickle_path_relative=False,
-                       return_original=False):
+                       pickle_path_data=False, pickle_path_relative=False):
         """
             args:
                 img_root: str
@@ -81,7 +80,6 @@ class Template_ClassificationDatasetLoader(data.Dataset):
         self.input_transform = input_transform
         self.load_all_in_ram = load_all_in_ram
         self.img_convert_type = img_convert_type
-        self.return_original = return_original
 
         self.dataset = []
 
@@ -149,9 +147,6 @@ class Template_ClassificationDatasetLoader(data.Dataset):
         else:
             img = Image.open(self.dataset[index]["image"]).convert(self.img_convert_type)
             label = self.dataset[index]["label"]
-
-        if self.return_original:
-            original_img = img.copy()
                 
         if self.input_transform is not None:
             img = self.input_transform(img)
@@ -161,10 +156,6 @@ class Template_ClassificationDatasetLoader(data.Dataset):
                 img = torch.from_numpy(img).unsqueeze(0).type(torch.FloatTensor)
             else:
                 img = torch.from_numpy(img.transpose(2,0,1)).type(torch.FloatTensor)
-
-        if self.return_original:
-            # output of the loader in the batch, label is just a tuple so you need torch.LongTensor()
-            return img, label, torch.from_numpy(np.asarray(original_img)).type(torch.LongTensor)
 
         return img, label
 
