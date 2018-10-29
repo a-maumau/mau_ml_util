@@ -11,7 +11,7 @@ def is_exist(folder_path):
 	return os.path.exists(os.path.expanduser(folder_path))
 	
 def path_join(*paths):
-	return os.path.join(*paths)
+	return os.path.expanduser(os.path.join(*paths))
 
 def list_dir(path):
 	return os.listdir(os.path.expanduser(path))
