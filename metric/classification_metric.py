@@ -46,7 +46,7 @@ class ClassificationMetric(object):
     def __add_to_matrix(self, pred_label, gt_label):
         for p_index in range(self.class_num):
             for gt_index in range(self.class_num):
-                self.confusion_matrix[p_index, gt_index] += torch.sum((pred_label==p_index)*(gt_label==gt_index))
+                self.confusion_matrix[p_index, gt_index] += torch.sum((pred_label==p_index)*(gt_label==gt_index)).to(self.map_device)
 
     def calc_acc(self):
         return float(torch.trace(self.confusion_matrix).cpu().item())/float(torch.sum(self.confusion_matrix).cpu().item())
