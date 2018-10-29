@@ -1,6 +1,7 @@
 from ..train_logger import TrainLogger
 from ..metric import ClassificationMetric
 from ..templates.trainer_template import Template_Trainer
+from ..utils.image_util import torch_tensor_to_image
 
 import os
 from datetime import datetime
@@ -76,8 +77,8 @@ class ClassificationTrainer(Template_Trainer):
             self.tlog.setup_output("val_{}_batch_{}_sample".format(val_num, batch_num))
                     
             for n in range(batch_size):
-                img = np.uint8(img[n].squeeze(0).cpu().detach().numpy()*255)
-                self.tlog.pack_output(Image.fromarray(img), not_in_schema=True,
+                img = torch_tensor_to_image(img[n], coeff=255)
+                self.tlog.pack_output(img, not_in_schema=True,
                                       additional_name="input_gt_{}_pred_{}".format(int(pred_label[n].cpu().detach().item()), int(gt_label[n].cpu().detach().item())))
 
                 self.tlog.pack_output(None, desc.format(int(pred_label[n].cpu().detach().item()), int(gt_label[n].cpu().detach().item())), desc_items)
