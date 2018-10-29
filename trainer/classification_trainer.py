@@ -121,7 +121,7 @@ class ClassificationTrainer(Template_Trainer):
         metric = ClassificationMetric(self.args.class_num, map_device=self.map_device)
         _trainval_loader = self.to_tqdm(self.val_loader, desc="train val", quiet=self.args.quiet)
 
-        for b, (img, label, original_image) in enumerate(_trainval_loader):
+        for b, (img, label) in enumerate(_trainval_loader):
             batch_size = image.shape[0]
 
             images = self.format_tensor(image, requires_grad=False, map_device=self.map_device)
