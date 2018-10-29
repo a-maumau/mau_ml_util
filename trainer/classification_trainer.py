@@ -121,11 +121,11 @@ class ClassificationTrainer(Template_Trainer):
         metric = ClassificationMetric(self.args.class_num, map_device=self.map_device)
         _trainval_loader = self.to_tqdm(self.val_loader, desc="train val", quiet=self.args.quiet)
 
-        for b, (img, label) in enumerate(_trainval_loader):
+        for b, (image, label) in enumerate(_trainval_loader):
             batch_size = image.shape[0]
 
             images = self.format_tensor(image, requires_grad=False, map_device=self.map_device)
-            labels = self.format_tensor(torch.LongTensor(labels), requires_grad=False, map_device=self.map_device)
+            labels = self.format_tensor(torch.LongTensor(label), requires_grad=False, map_device=self.map_device)
 
             outputs = self.model.inference(img)
 
