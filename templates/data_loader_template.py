@@ -270,13 +270,21 @@ class Template_SegmentationDatasetLoader(data.Dataset):
         # read from folders
         if dataset_pickle_path is None:
             if img_list_path is None:
-                name_list = []
-                image_list = list_dir(path_join(img_root))
+                input_name_list = []
+                mask_name_list = []
+
+                input_image_list = list_dir(path_join(img_root))
                 for name in image_list:
+                    # replacing both extensions is for when img_root and mask_root are same
                     name_list.append(name.replace(img_ext, "").replace(mask_ext, ""))
 
+                mask_image_list = list_dir(path_join(mask_root))
+                for name in image_list:
+                    # replacing both extensions is for when img_root and mask_root are same
+                    mask_name_list.append(name.replace(img_ext, "").replace(mask_ext, ""))
+
                 # to erase duplication of names
-                image_list = list(set(name_list))
+                image_list = list(set(input_name_list+mask_name_list))
             else:
                 with open(path_join(img_list_path), "r") as file:
                     image_list = file.readlines()
