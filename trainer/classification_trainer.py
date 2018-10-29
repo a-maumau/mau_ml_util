@@ -217,5 +217,5 @@ class ClassificationTrainer(Template_Trainer):
                         save_dir=self.model_param_dir, save_name='model_param_fin_{}.pth'.format(datetime.now().strftime("%Y%m%d_%H-%M-%S")),
                         save_index_name=index_namae)
 
-        print("training data is saved at {}".format(self.save_dir))
+        print("\ntraining data is saved at {}\n".format(self.save_dir))
         self.tlog.notify("{}{}: train finished.".format(self.args.notify_mention, self.args.save_name))
