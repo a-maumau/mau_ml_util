@@ -130,7 +130,7 @@ class ClassificationTrainer(Template_Trainer):
              
             # save only few batch for sample
             if b < self.args.validation_sample_batch_num:
-                self.save_sample_image(img, outputs, labels, val_num, b, desc="pred: {}, gt: {}")
+                self.save_sample_image(images, outputs, labels, val_num, b, desc="pred: {}, gt: {}")
 
         # flush the things that is packed in train logger
         self.save_sample_image(None, None, None, val_num, b, desc="validation sample", desc_items=["left: original input", "right: transformed"])
