@@ -77,8 +77,8 @@ class ClassificationTrainer(Template_Trainer):
             self.tlog.setup_output("val_{}_batch_{}_sample".format(val_num, batch_num))
                     
             for n in range(batch_size):
-                img = torch_tensor_to_image(img[n], coeff=255)
-                self.tlog.pack_output(img, not_in_schema=True,
+                pil_img = torch_tensor_to_image(img[n], coeff=255)
+                self.tlog.pack_output(pil_img, not_in_schema=True,
                                       additional_name="input_gt_{}_pred_{}".format(int(pred_label[n].cpu().detach().item()), int(gt_label[n].cpu().detach().item())))
 
                 self.tlog.pack_output(None, desc.format(int(pred_label[n].cpu().detach().item()), int(gt_label[n].cpu().detach().item())), desc_items)
@@ -127,7 +127,7 @@ class ClassificationTrainer(Template_Trainer):
 
             outputs = self.model.inference(images)
 
-            metric(outputs, labels.unsqueeze(1))
+            metric(outputs, labels)
              
             # save only few batch for sample
             if b < self.args.validation_sample_batch_num:
