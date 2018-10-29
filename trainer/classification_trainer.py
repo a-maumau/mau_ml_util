@@ -147,7 +147,7 @@ class ClassificationTrainer(Template_Trainer):
         
         log_msg_data = [val_num, acc, np.mean(precision_class), np.mean(recall_class)]
         # logging
-        self.tlog.log("val", log_msg_data+precision_class+jaccard_class)
+        self.tlog.log("val", log_msg_data+precision_class+recall)
         self.tlog.log_message("[#{: 6d}] mean pix acc.:{:.5f}, precision:{:.5f}, recall:{:.5f}".format(*log_msg_data), "LOG", "validation")
         if not self.args.quiet:
            tqdm.write("[#{: 6d}] mean pix acc.:{:.5f}, precision:{:.5f}, IoU:{:.5f}".format(*log_msg_data))
