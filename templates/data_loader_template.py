@@ -1,6 +1,7 @@
 from ..utils.path_util import path_join, list_dir
 
 import pickle
+import numpy as np
 from PIL import Image
 
 import torch
