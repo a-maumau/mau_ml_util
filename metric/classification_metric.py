@@ -44,8 +44,8 @@ class ClassificationMetric(object):
 
     # per batch
     def __add_to_matrix(self, pred_label, gt_label):
-        print(pred_label.shepe)
-        print(gt_label.shepe)
+        print(pred_label.shape)
+        print(gt_label.shape)
         for p_index in range(self.class_num):
             for gt_index in range(self.class_num):
                 self.confusion_matrix[p_index, gt_index] += torch.sum((pred_label==p_index)*(gt_label==gt_index))
