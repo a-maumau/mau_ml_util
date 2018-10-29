@@ -274,12 +274,12 @@ class Template_SegmentationDatasetLoader(data.Dataset):
                 mask_name_list = []
 
                 input_image_list = list_dir(path_join(img_root))
-                for name in image_list:
+                for name in input_image_list:
                     # replacing both extensions is for when img_root and mask_root are same
                     name_list.append(name.replace(img_ext, "").replace(mask_ext, ""))
 
                 mask_image_list = list_dir(path_join(mask_root))
-                for name in image_list:
+                for name in mask_image_list:
                     # replacing both extensions is for when img_root and mask_root are same
                     mask_name_list.append(name.replace(img_ext, "").replace(mask_ext, ""))
 
