@@ -129,7 +129,7 @@ class ClassificationTrainer(Template_Trainer):
 
             outputs = self.model.inference(images)
 
-            metric(outputs, labels)
+            metric(outputs, labels.unsqueeze(1))
              
             # save only few batch for sample
             if b < self.args.validation_sample_batch_num:
