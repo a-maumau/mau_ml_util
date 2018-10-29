@@ -79,12 +79,9 @@ class SegmentationMetric(object):
 
     # per batch
     def __add_to_matrix(self, pred_label, gt_label):
-        print(pred_label)
         for p_index in range(self.class_num):
             for gt_index in range(self.class_num):
-                add = torch.sum((pred_label==p_index)*(gt_label==gt_index)).to(self.map_device)
-                self.confusion_matrix[p_index, gt_index] += add
-                #self.confusion_matrix[p_index, gt_index] += torch.sum((pred_label==p_index)*(gt_label==gt_index)).to(self.map_device)
+                self.confusion_matrix[p_index, gt_index] += torch.sum((pred_label==p_index)*(gt_label==gt_index))
         """
         for gt_class_id in range(self.class_num):
             gt_class = torch.eq(gt_label, gt_class_id).to(dtype=torch.long)
