@@ -223,6 +223,9 @@ class SegmentationTrainer(Template_Trainer):
                 images = self.format_tensor(img, map_device=self.map_device)
                 masks = self.format_tensor(mask, map_device=self.map_device)
 
+                print(images)
+                print(masks)
+
                 output = self.model(images)
                 batch_loss = self.model.loss(output, masks)
 
