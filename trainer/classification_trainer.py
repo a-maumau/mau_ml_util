@@ -81,7 +81,7 @@ class ClassificationTrainer(Template_Trainer):
                 self.tlog.pack_output(pil_img, not_in_schema=True,
                                       additional_name="input_gt_{}_pred_{}".format(int(pred_label[n].cpu().detach().item()), int(gt_label[n].cpu().detach().item())))
 
-                self.tlog.pack_output(None, desc.format(int(pred_label[n].cpu().detach().item()), int(gt_label[n].cpu().detach().item())), desc_items)
+                self.tlog.pack_output(None, desc.format(int(gt_label[n].cpu().detach().item()), int(pred_label[n].cpu().detach().item())), desc_items)
         else:
             # flush the image that is packed in train logger
             self.tlog.pack_output(None, desc, desc_items)
