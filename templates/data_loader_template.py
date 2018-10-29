@@ -87,7 +87,7 @@ class Template_ClassificationDatasetLoader(data.Dataset):
 
         # read from folders
         if dataset_pickle_path is None:
-            with open(path_join(img_list_path), "r") as file:
+            with open(img_list_path, "r") as file:
                 image_list = file.readlines()
 
             data_list = [img_name.split(" ") for img_name in image_list]
@@ -287,7 +287,7 @@ class Template_SegmentationDatasetLoader(data.Dataset):
                 # to erase duplication of names
                 image_list = list(set(input_name_list) & set(mask_name_list))
             else:
-                with open(path_join(img_list_path), "r") as file:
+                with open(img_list_path, "r") as file:
                     image_list = file.readlines()
                     image_list = [img_name.rstrip("\n") for img_name in image_list]
 

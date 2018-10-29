@@ -64,8 +64,6 @@ class ClassificationTrainer(Template_Trainer):
 
         self.map_device = map_device
 
-        self.cmap = self._gen_cmap()
-
         self.lr_policy = lr_policy
         self.iter_wise = self.lr_policy.iteration_wise
 
@@ -78,15 +76,12 @@ class ClassificationTrainer(Template_Trainer):
             self.tlog.setup_output("val_{}_batch_{}_sample".format(val_num, batch_num))
                     
             for n in range(batch_size):
-                self.tlog.pack_output(Image.fromarray(np.uint8(img[n].detach().numpy())))
+                self.tlog.pack_output(Image.fromarray(np.uint8(original_img[n].detach().numpy())),
+                                     additional_name="original_gt_{}_pred_{}".format(int(pred_label[n].cpu().detach().item()), int(gt_label[n].cpu().detach().item())))
 
-                pred_img = np.uint8(pred_mask[n].squeeze(0).cpu().detach().numpy())
-                self.tlog.pack_output(Image.fromarray(pred_img), not_in_schema=True)
-                self.tlog.pack_output(Image.fromarray(self.convert_to_color_map(pred_img, self.cmap)))
-
-                gt_img = np.uint8(gt_mask[n].cpu().detach().numpy())
-                self.tlog.pack_output(Image.fromarray(gt_img), not_in_schema=True)
-                self.tlog.pack_output(Image.fromarray(self.convert_to_color_map(gt_img, self.cmap)))
+                img = np.uint8(img[n].squeeze(0).cpu().detach().numpy()*255)
+                self.tlog.pack_output(Image.fromarray(img), not_in_schema=True,
+                                      additional_name="input_gt_{}_pred_{}".format(int(pred_label[n].cpu().detach().item()), int(gt_label[n].cpu().detach().item())))
 
                 self.tlog.pack_output(None, desc.format(int(pred_label[n].cpu().detach().item()), int(gt_label[n].cpu().detach().item())), desc_items)
         else:
