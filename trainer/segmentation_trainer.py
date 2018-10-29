@@ -230,7 +230,6 @@ class SegmentationTrainer(Template_Trainer):
                 batch_loss = self.model.loss(output, masks)
 
                 total_loss += batch_loss.item()
-                iter_total_loss += batch_loss.item()
 
                 batch_loss.backward()
                 self.optimizer.step()

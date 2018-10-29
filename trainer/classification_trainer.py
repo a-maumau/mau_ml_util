@@ -189,7 +189,6 @@ class ClassificationTrainer(Template_Trainer):
                 batch_loss = self.model.loss(output, labels)
 
                 total_loss += batch_loss.item()
-                iter_total_loss += batch_loss.item()
 
                 batch_loss.backward()
                 self.optimizer.step()
