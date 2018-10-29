@@ -143,7 +143,7 @@ class ClassificationTrainer(Template_Trainer):
 
         for class_id in range(self.args.class_num):
             precision_class.append(precision["class_{}".format(class_id)])
-            recall_class.append(jaccard_index["class_{}".format(class_id)])
+            recall_class.append(recall["class_{}".format(class_id)])
         
         log_msg_data = [val_num, acc, np.mean(precision_class), np.mean(recall_class)]
         # logging
