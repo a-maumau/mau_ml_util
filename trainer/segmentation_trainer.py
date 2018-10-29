@@ -166,10 +166,10 @@ class SegmentationTrainer(Template_Trainer):
         for b, (image, mask, original_image) in enumerate(_trainval_loader):
             batch_size = image.shape[0]
 
-            img = self.format_tensor(image, requires_grad=False, map_device=self.map_device)
+            images = self.format_tensor(image, requires_grad=False, map_device=self.map_device)
             mask = self.format_tensor(mask, requires_grad=False, map_device=self.map_device)
 
-            outputs = self.model.inference(img)
+            outputs = self.model.inference(images)
 
             metric(outputs, mask)
              
@@ -223,8 +223,8 @@ class SegmentationTrainer(Template_Trainer):
                 images = self.format_tensor(img, map_device=self.map_device)
                 masks = self.format_tensor(mask, map_device=self.map_device)
 
-                output = self.model(images)
-                batch_loss = self.model.loss(output, masks)
+                outputs = self.model(images)
+                batch_loss = self.model.loss(outputs, masks)
 
                 total_loss += batch_loss.item()
 

@@ -127,7 +127,7 @@ class ClassificationTrainer(Template_Trainer):
             images = self.format_tensor(image, requires_grad=False, map_device=self.map_device)
             labels = self.format_tensor(torch.LongTensor(label), requires_grad=False, map_device=self.map_device)
 
-            outputs = self.model.inference(img)
+            outputs = self.model.inference(images)
 
             metric(outputs, labels)
              
