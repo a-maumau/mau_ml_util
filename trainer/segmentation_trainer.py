@@ -1,6 +1,7 @@
 from ..train_logger import TrainLogger
 from ..metric import SegmentationMetric
 from ..templates.trainer_template import Template_Trainer
+from ..globals.variables import CPU
 
 import os
 from datetime import datetime
@@ -11,7 +12,6 @@ import numpy as np
 from tqdm import tqdm
 from PIL import Image
 
-CPU = torch.device('cpu')
 torch.backends.cudnn.benchmark = True
 
 class SegmentationTrainer(Template_Trainer):

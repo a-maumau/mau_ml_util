@@ -2,12 +2,11 @@
   input should be a torch.Tensor
   it would be easy to implement in numpy, I think.
 """
+from ...globals.variables import CPU, NAN, eps
+
 import torch
 import torch.nn as nn
 import numpy as np
-
-eps = 1e-8
-CPU = torch.device('cpu')
 
 def pixel_accuracy(pred_labels, gt_labels, size_average=True, map_device=CPU):
     """Return the pixel accuracy        

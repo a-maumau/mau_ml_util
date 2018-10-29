@@ -1,10 +1,9 @@
 """
     Pytorch is expected.
 """
-import torch
+from ..globals.variables import CPU, NAN
 
-CPU = torch.device('cpu')
-NAN = float('nan')
+import torch
 
 class SegmentationMetric(object):
     """

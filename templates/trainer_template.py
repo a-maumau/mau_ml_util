@@ -1,12 +1,11 @@
 from ..train_logger import TrainLogger
 from ..utils.path_util import path_join
+from ..globals.variables import CPU
 
 import abc
 
 import torch
 from tqdm import tqdm
-
-CPU = torch.device('cpu')
 
 class Template_Trainer:
     __metaclass__ = abc.ABCMeta
