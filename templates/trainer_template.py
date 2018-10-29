@@ -1,4 +1,5 @@
 from ..train_logger import TrainLogger
+from ..utils.path_util import path_join
 
 import abc
 
@@ -44,11 +45,11 @@ class Template_Trainer:
     def get_argparse_arguments(self, args):
         return args._get_kwargs()
 
-    def format_tensor(self, x, requires_grad=True, map_device=CPU):
-        if not requires_grad:
-            x = x.to(map_device).detach()
-        else:
+    def format_tensor(self, x, requires_grad=True, map_device=CPU):            
+        if requires_grad:
             x = x.to(map_device)
+        else:
+            x = x.to(map_device).detach()
 
         return x
 
@@ -83,4 +84,4 @@ class Template_Trainer:
 
         state[save_index_name] = save_index
 
-        model.save(add_state=state, file_name=os.path.join(save_dir, save_name.format(save_index)))
+        model.save(add_state=state, file_name=path_join(save_dir, save_name.format(save_index)))
