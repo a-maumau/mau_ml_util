@@ -196,6 +196,97 @@ class RandomResizedCrop(object):
         format_string += ', interpolation={0})'.format(interpolate_str)
         return format_string
 
+class RandomSizedCropResize(object):
+    """
+        It first crop in size of [crop_size*crop_scale[0], crop_size*crop_scale[1]]
+        then 
+        then resize to size of resize_size
+    """
+    def __init__(self, crop_size, resize_size, crop_scale=(0.8, 1.2), crop_ratio=(3. / 4., 4. / 3.), padding=None, pad_if_needed=False, fill=0, padding_mode='constant', interpolation=Image.BILINEAR):
+        if isinstance(size, numbers.Number):
+            self.crop_size = (int(crop_size), int(crop_size))
+        else:
+            self.crop_size = tuple(crop_size)
+
+        if isinstance(size, numbers.Number):
+            self.resize_size = (int(resize_size), int(resize_size))
+        else:
+            self.resize_size = tuple(resize_size)
+
+        self.scale = scale
+        self.ratio = ratio
+        self.padding = padding
+        self.pad_if_needed = pad_if_needed
+        self.fill = fill
+        self.padding_mode = padding_mode
+        self.interpolation = interpolation
+
+        self.max_crop_scaling = max(self.crop_scale)
+        self.max_crop_ratio = max(self.crop_ratio+tuple([1.0]))
+        self.max_crop_size = self.max_crop_scaling*self.max_crop_ratio
+
+    @staticmethod
+    def get_params(img, scale, ratio):
+        for attempt in range(10):
+            area = self.crop_size[0] * self.crop_size[1]
+            target_area = random.uniform(*scale) * area
+            aspect_ratio = random.uniform(*ratio)
+
+            w = int(round(math.sqrt(target_area * aspect_ratio)))
+            h = int(round(math.sqrt(target_area / aspect_ratio)))
+
+            if random.random() < 0.5:
+                w, h = h, w
+
+            if w <= img.size[0] and h <= img.size[1]:
+                i = random.randint(0, img.size[1] - h)
+                j = random.randint(0, img.size[0] - w)
+                return i, j, h, w
+
+        # Fallback
+        w = min(img.size[0], img.size[1])
+        i = (img.size[1] - w) // 2
+        j = (img.size[0] - w) // 2
+        
+        return i, j, w, w
+
+    def __call__(self, input_img, target_img):
+        """
+            assuming the input_img and target_img has same size
+
+            at this moment, I'm lazy to think if crop size has different value in w, h
+            so consideringing as same size
+        """
+
+        # crop max size is crop_size * self.max_crop_size
+        # thinking the worst case
+
+        if self.padding is not None:
+            input_img = F.pad(input_img, self.padding, self.fill, self.padding_mode)
+            target_img = F.pad(target_img, self.padding, 0, self.padding_mode)
+
+        # pad the width if needed
+        if self.pad_if_needed and img.size[0] < self.size[1]*self.max_crop_size:
+            input_img = F.pad(input_img, (self.size[1]*self.max_crop_size - input_img.size[0], 0), self.fill, self.padding_mode)
+            target_img = F.pad(targe_timg, (self.size[1]*self.max_crop_size - input_img.size[0], 0), 0, self.padding_mode)
+        # pad the height if needed
+        if self.pad_if_needed and input_img.size[1] < self.size[0]*self.max_crop_size:
+            input_img = F.pad(input_img, (0, self.size[0]*self.max_crop_size - input_img.size[1]), self.fill, self.padding_mode)
+            target_img = F.pad(target_img, (0, self.size[0]*self.max_crop_size - input_img.size[1]), 0, self.padding_mode)
+
+        i, j, h, w = self.get_params(input_img, self.scale, self.ratio)
+        
+        return F.resized_crop(input_img, i, j, h, w, self.resize_size, self.interpolation), F.resized_crop(target_img, i, j, h, w, self.resize_size, Image.NEAREST)
+
+    def __repr__(self):
+        interpolate_str = _pil_interpolation_to_str[self.interpolation]
+        format_string = self.__class__.__name__ + '(size={0}'.format(self.size)
+        format_string += ', scale={0}'.format(tuple(round(s, 4) for s in self.scale))
+        format_string += ', ratio={0}'.format(tuple(round(r, 4) for r in self.ratio))
+        format_string += ', interpolation={0})'.format(interpolate_str)
+        
+        return format_string
+
 class PairRandomRotate(object):
     def __init__(self, degree):
         self.degree = degree
