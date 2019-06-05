@@ -152,7 +152,7 @@ class SegmentationMetric(object):
 
 # test
 def __test_module(use_gpu=False):
-    from ..test.test_util import *
+    from ..test.test_util import print_test_starting, print_test_log, print_test_passed, print_test_failed, return_test_passed, return_test_failed
 
     print_test_starting(__file__)
 
