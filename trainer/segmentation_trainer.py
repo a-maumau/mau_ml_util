@@ -1,7 +1,7 @@
 from ..train_logger import TrainLogger
 from ..metric import SegmentationMetric
-from ..templates.trainer_template import Template_Trainer
-from ..globals.variables import CPU
+from ..template.trainer_template import Template_Trainer
+from ..constant.constants import CPU
 
 import os
 from datetime import datetime

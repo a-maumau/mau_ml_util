@@ -1,7 +1,7 @@
 """
     Pytorch is expected.
 """
-from ..globals.variables import CPU, NAN
+from ..constant.constants import CPU, NAN
 
 import torch
 
@@ -151,15 +151,10 @@ class SegmentationMetric(object):
         return precision
 
 # test
-if __name__ == '__main__':
-    import time
-    import argparse
+def __test_module(use_gpu=False):
+    print("[{}] module test: ".format(__file__))
 
-    parser = argparse.ArgumentParser()
-    parser.add_argument('-gpu', action="store_true", default=False, help='')
-    args = parser.parse_args()
-
-    if args.gpu:
+    if use_gpu:
         map_device = torch.device('cuda')
     else:
         map_device = torch.device('cpu')
@@ -200,8 +195,20 @@ if __name__ == '__main__':
     m = SegmentationMetric(3)
     m(p, g)
 
+    metric_results = [m.calc_pix_acc(),
+                     m.calc_mean_pix_acc(),
+                     m.calc_mean_jaccard_index(),
+                     m.calc_mean_precision()]
+
+    print(metric_results)
+
+    """
+    # stupid test...
     print(m.confusion_matrix)
-    print(m.calc_pix_acc())
-    print(m.calc_mean_pix_acc())
-    print(m.calc_mean_jaccard_index())
-    print(m.calc_mean_precision())
+    if metric_results[0] != 0.3333333333333333:
+        return False
+
+    correct_score = [0.111, 0.222, 0.0833]
+    for i in range(3):
+        if metric_results[1]["class_{}".format(i)] != 
+    """

@@ -1,4 +1,4 @@
-from ..templates.data_loader_template import Template_SegmentationDatasetLoader
+from ..template.data_loader_template import Template_SegmentationDatasetLoader
 
 class SegmentationDatasetLoader(Template_SegmentationDatasetLoader):
     def __init__(self, img_root, mask_root, img_list_path=None, dataset_pickle_path=None,

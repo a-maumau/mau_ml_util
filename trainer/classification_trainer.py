@@ -1,8 +1,8 @@
 from ..train_logger import TrainLogger
 from ..metric import ClassificationMetric
-from ..templates.trainer_template import Template_Trainer
+from ..template.trainer_template import Template_Trainer
 from ..utils.image_util import torch_tensor_to_image
-from ..globals.variables import CPU
+from ..constant.constants import CPU
 
 import os
 from datetime import datetime

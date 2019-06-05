@@ -1,7 +1,7 @@
 """
     Pytorch is expected.
 """
-from ..globals.variables import CPU, NAN
+from ..constant.constants import CPU, NAN
 
 import torch
 

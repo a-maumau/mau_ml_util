@@ -2,7 +2,7 @@
   input should be a torch.Tensor
   it would be easy to implement in numpy, I think.
 """
-from ...globals.variables import CPU, NAN, eps
+from ...constant.constants import CPU, NAN, eps
 
 import torch
 import torch.nn as nn

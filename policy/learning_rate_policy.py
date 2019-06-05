@@ -3,7 +3,7 @@
     I actually don't like using **args
     but for flexiblity...
 """
-from ..templates.decay_policy_template import Template_DecayPolicy
+from ..template.decay_policy_template import Template_DecayPolicy
 
 import numpy as np
 
