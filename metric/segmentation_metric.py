@@ -152,7 +152,9 @@ class SegmentationMetric(object):
 
 # test
 def __test_module(use_gpu=False):
-    print("[{}] module test: ".format(__file__))
+    from ..test.test_util import *
+
+    print_test_starting(__file__)
 
     if use_gpu:
         map_device = torch.device('cuda')
@@ -187,28 +189,49 @@ def __test_module(use_gpu=False):
     p = torch.LongTensor(pred_tensor).to(device=map_device)
     g = torch.LongTensor(gt_tensor).to(device=map_device)
 
-    print("prediction tensor")
-    print(p)
-    print("ground truth tensor")
-    print(g)
+    print_test_log("input tensor")
+    print_test_log(p)
+    print_test_log("")
+    print_test_log("ground truth tensor")
+    print_test_log(g)
 
     m = SegmentationMetric(3)
     m(p, g)
 
     metric_results = [m.calc_pix_acc(),
-                     m.calc_mean_pix_acc(),
-                     m.calc_mean_jaccard_index(),
-                     m.calc_mean_precision()]
+                      m.calc_mean_pix_acc(),
+                      m.calc_mean_jaccard_index(),
+                      m.calc_mean_precision()]
 
-    print(metric_results)
-
-    """
     # stupid test...
-    print(m.confusion_matrix)
-    if metric_results[0] != 0.3333333333333333:
-        return False
+    print_test_log("confusion matrix:")
+    print_test_log(m.confusion_matrix)
+    
+    try:
+        if metric_results[0] != 0.3333333333333333:
+            print_test_log("expect: {}, but {}".format(v, metric_results[0][k]))
+            raise Exception("VALUE IS NOT CORRECT")
 
-    correct_score = [0.111, 0.222, 0.0833]
-    for i in range(3):
-        if metric_results[1]["class_{}".format(i)] != 
-    """
+        correct_score = {'class_0':0.1111111111111111, 'class_1':0.2222222222222222, 'class_2':0.08333333333333333}
+        for k, v in correct_score.items():
+            if metric_results[1][k] != v:
+                print_test_log("expect: {}, but {}".format(v, metric_results[1][k]))
+                raise Exception("VALUE IS NOT CORRECT")
+
+        correct_score = {'class_0': 0.1111111111111111, 'class_1': 0.2222222222222222, 'class_2': 0.25}
+        for k, v in correct_score.items():
+            if metric_results[2][k] != v:
+                print_test_log("expect: {}, but {}".format(v, metric_results[2][k]))
+                raise Exception("VALUE IS NOT CORRECT")
+
+        correct_score = {'class_0': 0.14285714285714285, 'class_1': 0.25, 'class_2': 1.0}
+        for k, v in correct_score.items():
+            if metric_results[3][k] != v:
+                print_test_log("expect: {}, but {}".format(v, metric_results[3][k]))
+                raise Exception("VALUE IS NOT CORRECT")
+    except:
+        print_test_failed()
+        return return_test_failed()
+    
+    print_test_passed()
+    return return_test_passed()
