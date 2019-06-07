@@ -194,6 +194,7 @@ def __test_module(use_gpu=False):
     print_test_log("")
     print_test_log("ground truth tensor")
     print_test_log(g)
+    print_test_log("")
 
     m = SegmentationMetric(3)
     m(p, g)

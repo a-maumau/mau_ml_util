@@ -34,14 +34,14 @@ class str_bg:
     END = '\033[0m' 
 
 def print_test_starting(module_name=""):
-    print("[module test: {}]".format(module_name))
+    print("module test: {}".format(module_name))
     print("-------------------------\n")
 
-msg_test_passed = "\n------ {}{}test passed{}{} ------\n".format(str_bg.GREEN, str_fg.BLACK, str_fg.END, str_bg.END)
+msg_test_passed = "\n------ test {}{}passed{}{} ------\n".format(str_bg.GREEN, str_fg.BLACK, str_fg.END, str_bg.END)
 def print_test_passed():
     print(msg_test_passed)
 
-msg_test_failed = "\n------ {}{}test failed{}{} ------\n".format(str_bg.RED, str_fg.WHITE, str_fg.END, str_bg.END)
+msg_test_failed = "\n------ test {}{}failed{}{} ------\n".format(str_bg.RED, str_fg.WHITE, str_fg.END, str_bg.END)
 def print_test_failed():
     print(msg_test_failed)
 
@@ -54,3 +54,4 @@ def return_test_passed():
 
 def return_test_failed():
     return False
+ 
